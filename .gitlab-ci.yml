@@ -90,14 +90,14 @@ pages:
 
 sync_readme:
   stage: build
-  needs:
-  - sync_slim
-  - sync_fat
-  - sync_alpine
   extends: .docker_readme
   rules:
   - if: $TASK == "readme"
   - if: $CI_COMMIT_BRANCH == "master" && $TASK == "runtime"
+    needs:
+    - sync_slim
+    - sync_fat
+    - sync_alpine
   environment:
     name: "$CI_COMMIT_BRANCH/Docker Readme"
     url: https://hub.docker.com/r/karsten13/magicmirror
