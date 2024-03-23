@@ -24,6 +24,31 @@ test_debug21:
     entrypoint: [""]
   extends: .test_debug
 
+test_electron_rebuild:
+  stage: test
+  variables:
+    GIT_STRATEGY: none
+  image: 
+    name: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_BRANCH}_fat_amd64
+    entrypoint: [""]
+  script:
+  - |
+    cd /opt/magic_mirror
+    echo "electron version:"
+    npx electron -v
+    echo "install additional dependencies:"
+    npm install @electron/rebuild onoff node-pty drivelist
+    echo "electron-rebuild version:"
+    npx electron-rebuild --version
+    echo "run electron-rebuild:"
+    npx electron-rebuild
+  rules:
+  - if: $TASK == "electronrebuild"
+  - if: $TASK == "runtime" && $CI_COMMIT_BRANCH != "master"
+    needs: ["build_amd64_fat"]
+  environment:
+    name: "$CI_COMMIT_BRANCH/Test Electron rebuild"
+
 snyk_amd64:
   stage: test
   image: 
