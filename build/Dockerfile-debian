@@ -37,7 +37,7 @@ RUN set -e; \
         else \
           _pck="${_pck} libllvm11"; \
         fi; \
-        _pck="${_pck} libraspberrypi-bin libgl1-mesa-dri libglapi-mesa libsensors5 libdrm-radeon1 libelf1 libdrm-amdgpu1 libdrm-nouveau2 x11-xserver-utils"; \
+        _pck="${_pck} libraspberrypi-bin libgl1-mesa-dri libglapi-mesa libsensors5 libdrm-radeon1 libelf1 libdrm-amdgpu1 libdrm-nouveau2 x11-xserver-utils libgpiod-dev gpiod"; \
         wget https://archive.raspbian.org/raspbian.public.key -O - | apt-key add -; \
         echo 'deb http://raspbian.raspberrypi.org/raspbian/ '${DEBIAN_VERSION}' main contrib non-free rpi' | tee -a /etc/apt/sources.list; \
         wget -O - http://archive.raspberrypi.org/debian/raspberrypi.gpg.key | sudo apt-key add -; \
