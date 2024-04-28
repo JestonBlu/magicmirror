@@ -2,7 +2,7 @@ ARG buildarch
 ARG BUILDER_IMG
 ARG NODE_VERSION
 FROM ${BUILDER_IMG} as builder
-FROM ${buildarch}node:${NODE_VERSION}-alpine
+FROM --platform=${buildarch} node:${NODE_VERSION}-alpine
 LABEL maintainer="Karsten Hassel"
 
 USER root

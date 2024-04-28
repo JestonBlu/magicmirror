@@ -46,10 +46,11 @@ variables:
       export opt
       export dev
       # set build arch
+      export buildarch="linux/amd64"
       if [ "${imgarch}" = "arm" ]; then
-        export buildarch="arm32v7/"
+        export buildarch="linux/arm/v7"
       elif [ "${imgarch}" = "arm64" ]; then
-        export buildarch="arm64v8/"
+        export buildarch="linux/arm64/v8"
       elif [ ! "${imgarch}" = "amd64" ]; then
         echo "unsupported image arch: ${imgarch}"
         exit 1

@@ -1,4 +1,3 @@
-ARG buildarch
 ARG BUILDER_IMG
 ARG BASE_IMG
 FROM ${BUILDER_IMG} as builder
