@@ -5,11 +5,10 @@
     set -e
     [ -z "${SLIM}" ] && export FAT="_fat"
     [ "${dev}" == "dn" ] && export NODE_ENV="production" || export NODE_ENV="test"
-    [ "${DEBIAN_VERSION}" == "buster" ] && _suffix="_buster"
     set | grep -E "BUILDER_IMG=|NODE_VERSION=|buildarch=|FAT=|DEBIAN_VERSION=|ADD_TAG="
     build --context "./build" \
       --dockerfile "Dockerfile-debian" \
-      --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_BRANCH}${_suffix}${FAT}_${ADD_TAG}" \
+      --destination "${CI_REGISTRY_IMAGE}:${CI_COMMIT_BRANCH}${FAT}_${ADD_TAG}" \
       --build-arg NODE_VERSION="${NODE_VERSION}" \
       --build-arg DEBIAN_VERSION="${DEBIAN_VERSION}" \
       --build-arg GIT_INFO="${GIT_INFO}" \
@@ -64,31 +63,6 @@ build_arm_fat:
   extends: .runtime
   environment:
     name: "$CI_COMMIT_BRANCH/Build arm fat"
-
-build_arm_buster:
-  variables:
-    imgkey: "arm-oy-dn"
-    SLIM: "-slim"
-    ADD_TAG: "arm"
-    DEBIAN_VERSION: "buster"
-    # Node > v19 not supported in buster:
-    NODE_VERSION: "18"
-  needs: ["bld_art: [arm-oy-dn]"]
-  extends: .runtime
-  environment:
-    name: "$CI_COMMIT_BRANCH/Build arm buster"
-
-build_arm_buster_fat:
-  variables:
-    imgkey: "arm-oy-dn"
-    ADD_TAG: "arm"
-    DEBIAN_VERSION: "buster"
-    # Node > v19 not supported in buster:
-    NODE_VERSION: "18"
-  needs: ["bld_art: [arm-oy-dn]"]
-  extends: .runtime
-  environment:
-    name: "$CI_COMMIT_BRANCH/Build arm buster fat"
 
 build_arm64:
   variables:
@@ -188,24 +162,4 @@ sync_fat:
   - .rule
   environment:
     name: "$CI_COMMIT_BRANCH/Docker Sync Debian Fat"
-    url: https://hub.docker.com/r/karsten13/magicmirror/tags
-
-sync_buster:
-  needs: 
-  - build_arm_buster
-  - build_arm_buster_fat
-  image: ${TOOLBOX_IMG}
-  stage: build
-  script:
-  - |
-    set -e
-    crane auth login "registry.gitlab.com" -u "${CI_REGISTRY_USER}" -p "${CI_REGISTRY_PASSWORD}"
-    crane auth login "docker.io" -u "${DOCKER_USER}" -p "${DOCKER_PASS}"
-    [ "${CI_COMMIT_BRANCH}" = "master" ] || _suffix="${CI_COMMIT_BRANCH}_"
-    crane copy "${CI_REGISTRY_IMAGE}:${CI_COMMIT_BRANCH}_buster_fat_arm" "${DOCKER_USER}/magicmirror:${_suffix}buster_fat"
-    crane copy "${CI_REGISTRY_IMAGE}:${CI_COMMIT_BRANCH}_buster_arm" "${DOCKER_USER}/magicmirror:${_suffix}buster"
-  extends: 
-  - .rule
-  environment:
-    name: "$CI_COMMIT_BRANCH/Docker Sync Buster"
     url: https://hub.docker.com/r/karsten13/magicmirror/tags

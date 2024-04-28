@@ -6,8 +6,6 @@ permalink: /pi-modules/
 
 Many modules are working out of the box with this docker setup. But if you want to use modules which needs hardware of the raspberry pi the setup can be tricky. This step-by-step example is a showcase how to solve such problems when you want to use a PIR motion sensor.
 
-> ⚠️ This example is made for running a current debian version as host os. If you are still running debian buster, you have to make some changes which are documented [here](https://github.com/guysoft/MagicMirrorOS/issues/54).
-
 # MagicMirror with PIR motion sensor
 
 ## Install module MMM-Pir-Sensor-Lite

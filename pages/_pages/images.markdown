@@ -7,8 +7,6 @@ toc: false
 
 ## Images on [Docker Hub](https://hub.docker.com/r/karsten13/magicmirror/):  [![](https://img.shields.io/docker/pulls/karsten13/magicmirror.svg)](https://hub.docker.com/r/karsten13/magicmirror/)
 
-> ⚠️ If you are still running debian buster on your raspberry pi the `karsten13/magicmirror:latest` images won't work anymore, you have to switch to the compatible image `karsten13/magicmirror:buster`.
-
 The docker image `karsten13/magicmirror` is available with these tags:
 
 TAG                | OS/ARCH     | ELECTRON | DISTRO | DESCRIPTION
@@ -19,8 +17,6 @@ TAG                | OS/ARCH     | ELECTRON | DISTRO | DESCRIPTION
 **fat** (or {{ site.data.gitlab.variables.MAGICMIRROR_VERSION }}_fat)| linux/amd64 | yes      | debian {{ site.data.gitlab.variables.DEBIAN_VERSION_MASTER }} | both modes
 **fat** (or {{ site.data.gitlab.variables.MAGICMIRROR_VERSION }}_fat)| linux/arm   | yes      | debian {{ site.data.gitlab.variables.DEBIAN_VERSION_MASTER }} | for raspberry pi
 **fat** (or {{ site.data.gitlab.variables.MAGICMIRROR_VERSION }}_fat)| linux/arm64 | yes      | debian {{ site.data.gitlab.variables.DEBIAN_VERSION_MASTER }} | for raspberry pi4 64-Bit-Version
-**buster** | linux/arm   | yes      | debian buster slim | for raspberry pi (deprecated)
-**buster_fat** | linux/arm   | yes      | debian buster | for raspberry pi (deprecated)
 **alpine**             | all 3 archs | no       | alpine | only `serveronly`-mode, smaller in size
 
 Version {{ site.data.gitlab.variables.MAGICMIRROR_VERSION }} is the current release of MagicMirror. Older version tags remain on docker hub, the other tags are floating tags and therefore overwritten with every new build. The used Node version is {{ site.data.gitlab.variables.NODE_VERSION_MASTER }}.
@@ -37,8 +33,6 @@ TAG                | OS/ARCH     | ELECTRON | DISTRO | DESCRIPTION
 **develop_fat**    | linux/amd64 | yes      | debian {{ site.data.gitlab.variables.DEBIAN_VERSION_DEVELOP }} | both modes
 **develop_fat**    | linux/arm   | yes      | debian {{ site.data.gitlab.variables.DEBIAN_VERSION_DEVELOP }} | for raspberry pi
 **develop_fat**    | linux/arm64 | yes      | debian {{ site.data.gitlab.variables.DEBIAN_VERSION_DEVELOP }} | for raspberry pi4 64-Bit-Version
-**develop_buster** | linux/arm   | yes      | debian buster slim | for raspberry pi (deprecated)
-**develop_buster_fat** | linux/arm   | yes      | debian buster | for raspberry pi (deprecated)
 **develop_alpine** | all 3 archs | no       | alpine | only `serveronly`-mode, smaller in size
 
 These images are using the `develop` branch of the MagicMirror git repository and Node version {{ site.data.gitlab.variables.NODE_VERSION_DEVELOP }}.

@@ -3,9 +3,7 @@
 mkdir -p "$HOME/scripts"
 _log="$HOME/scripts/start.log"
 if [[ ! -f "$HOME/magicmirror/run/docker-compose.yml" ]]; then
-  source "/etc/os-release"
-  [[ "$VERSION_CODENAME" == "buster" ]] && _dcfile="rpi_buster.yml" || _dcfile="rpi.yml"
-  cp -v "$HOME/magicmirror/run/$_dcfile" "$HOME/magicmirror/run/docker-compose.yml" &>> $_log
+  cp -v "$HOME/magicmirror/run/rpi.yml" "$HOME/magicmirror/run/docker-compose.yml" &>> $_log
   mkdir -p "$HOME/magicmirror/mounts"
 else
   echo "docker-compose.yml exists" &>> $_log

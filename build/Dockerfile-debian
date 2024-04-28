@@ -30,7 +30,7 @@ RUN set -e; \
     DEBIAN_FRONTEND=noninteractive apt-get -qy --no-install-recommends install git nano sudo openssl ca-certificates wget tini gnupg; \
     if [ "${opt}" = "oy" ]; then \
       _pck="${_pck} libgtk-3-0 libx11-xcb-dev libnss3-dev libxss1 libxtst6 libasound2 libdrm2 libgbm1 libxshmfence1 fonts-arphic-uming procps arp-scan"; \
-      if [ "${buildarch}" != "linux/amd64" ] && [ "${DEBIAN_VERSION}" != "buster" ]; then \
+      if [ "${buildarch}" != "linux/amd64" ]; then \
         # install pi stuff
         if [ "${DEBIAN_VERSION}" = "bookworm" ]; then \
           _pck="${_pck} libllvm14"; \
