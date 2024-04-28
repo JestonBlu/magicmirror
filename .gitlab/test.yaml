@@ -17,10 +17,10 @@ test_debug20:
     entrypoint: [""]
   extends: .test_debug
 
-test_debug21:
-  needs: ["build_debug21"]
+test_debug22:
+  needs: ["build_debug22"]
   image: 
-    name: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_BRANCH}_debug21
+    name: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_BRANCH}_debug22
     entrypoint: [""]
   extends: .test_debug
 
@@ -52,7 +52,7 @@ test_electron_rebuild:
 snyk_amd64:
   stage: test
   image: 
-    name: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_BRANCH}_debug21
+    name: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_BRANCH}_debug22
     entrypoint: [""]
   script:
   - sudo npm install -g snyk npm-check-updates

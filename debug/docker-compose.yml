@@ -3,7 +3,7 @@ version: '3'
 
 services:
   magicmirror:
-    image: registry.gitlab.com/khassel/magicmirror:develop_debug21
+    image: registry.gitlab.com/khassel/magicmirror:develop_debug22
 #    volumes:
 #      - /tmp/.X11-unix:/tmp/.X11-unix
 #      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket

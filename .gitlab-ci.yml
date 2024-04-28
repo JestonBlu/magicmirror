@@ -18,7 +18,7 @@ variables:
   GIT_DEPTH: 1
   MAGICMIRROR_VERSION: "v2.27.0"
   NODE_VERSION_MASTER: "20"
-  NODE_VERSION_DEVELOP: "21"
+  NODE_VERSION_DEVELOP: "22"
   DEBIAN_VERSION_MASTER: "bookworm"
   DEBIAN_VERSION_DEVELOP: "bookworm"
   GitRepo: "https://github.com/MagicMirrorOrg/MagicMirror.git"
