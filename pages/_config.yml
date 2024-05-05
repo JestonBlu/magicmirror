@@ -60,7 +60,7 @@ footer:
       url: https://gitlab.com/khassel/magicmirror
     - label: "MM Project"
       icon: "fab fa-fw fa-github"
-      url: https://github.com/MichMich/MagicMirror
+      url: https://github.com/MagicMirrorOrg/MagicMirror
     - label: "MM Documentation"
       icon: "fas fa-book"
       url: https://docs.magicmirror.builders/
@@ -212,7 +212,7 @@ defaults:
       sidebar:
         nav: "main"
       header:
-        overlay_image: https://raw.githubusercontent.com/MichMich/MagicMirror-Website/master/public/img/mirror.png
+        overlay_image: https://raw.githubusercontent.com/MagicMirrorOrg/MagicMirror-Website/master/public/img/mirror.png
 
 footer_scripts:
   - /assets/js/main.min.js # this is missing if another footer script is added

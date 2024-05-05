@@ -7,7 +7,7 @@ toc: false
 
 # MagicMirror²
 
-is an open source modular smart mirror platform. For more info visit the [project website](https://github.com/MichMich/MagicMirror). This project packs MagicMirror into a docker image.
+is an open source modular smart mirror platform. For more info visit the [project website](https://github.com/MagicMirrorOrg/MagicMirror). This project packs MagicMirror into a docker image.
 
 # Why Docker?
 
