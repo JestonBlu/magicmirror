@@ -41,6 +41,8 @@ RUN set -e; \
     fi; \
     echo "now executing: npm install ${npmargs}"; \
     npm install ${npmargs}; \
+    echo "now uninstalling unwanted pm2"; \
+    npm uninstall pm2 ${npmargs}; \
     cat package.json; \
     sed -i "s:address\: \"localhost\":address\: \"0.0.0.0\":" config/config.js.sample; \
     sed -i "s:ipWhitelist\: \[.*\],:ipWhitelist\: \[\],:" config/config.js.sample; \
