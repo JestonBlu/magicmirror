@@ -41,10 +41,14 @@ fi
 # create css/custom.css file https://github.com/MagicMirrorOrg/MagicMirror/issues/1977
 [ ! -f "${css_dir}/custom.css" ] && sudo touch ${css_dir}/custom.css
 
-_info "chown modules and config folder"
-sudo chown -R node:node ${base}/modules &
-sudo chown -R node:node ${config_dir}
-sudo chown -R node:node ${css_dir}
+if [ -z "$MM_NO_CHOWN" ]; then
+  _info "chown modules and config folder"
+  sudo chown -R node:node ${base}/modules &
+  sudo chown -R node:node ${config_dir}
+  sudo chown -R node:node ${css_dir}
+else
+  _info "skipping chown modules and config folder"
+fi
 
 if [ ! -f "${config_dir}/config.js" ]; then
   _info "copy default config.js to host"
