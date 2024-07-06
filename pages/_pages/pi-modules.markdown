@@ -45,8 +45,6 @@ To get this working you have to add an additional device into your `docker-compo
 Your `docker-compose.yml` file should now look like:
 
 ```yaml
-version: '3'
-
 services:
   magicmirror:
     container_name: mm
@@ -65,10 +63,6 @@ services:
     network_mode: host
     shm_size: "128mb"
     restart: unless-stopped
-    command:
-     - npm
-     - run
-     - start
 ```
 
 After restarting the container our PIR-Sensor should now work, you should see the countdown in the upper right corner.

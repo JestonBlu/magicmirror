@@ -2,7 +2,7 @@
   stage: test
   variables:
     GIT_STRATEGY: none
-    StartEnv: test
+    STARTENV: test
   script:
   - /opt/magic_mirror/entrypoint.sh
   extends:
@@ -55,12 +55,12 @@ snyk_amd64:
     name: ${CI_REGISTRY_IMAGE}:${CI_COMMIT_BRANCH}_debug22
     entrypoint: [""]
   script:
-  - sudo npm install -g snyk npm-check-updates
   - cd /opt/magic_mirror
-  - ncu --deep
-  - ncu --deep --target minor
-  - snyk auth ${SNYK_TOKEN}
-  - snyk test --all-projects
+  - npm install snyk npm-check-updates
+  - npx ncu --deep
+  - npx ncu --deep --target minor
+  - npx snyk auth ${SNYK_TOKEN}
+  - npx snyk test --all-projects
   rules:
   - if: $TASK == "snyk"
   environment:

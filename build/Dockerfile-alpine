@@ -15,12 +15,12 @@ COPY --chown=node:node *.sh /opt/magic_mirror/
 
 ARG GIT_INFO
 RUN set -e; \
-    apk add --no-cache git nano sudo tzdata tini coreutils; \
-    echo "node ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers; \
-    echo "Set disable_coredump false" > /etc/sudo.conf; \
-    chown -R node:node /home/node/; \
-    chown -R node:node .; \
-    chmod +x *.sh; \
+    apk add --no-cache git nano tzdata tini coreutils; \
+    echo "#!/bin/sh" > /usr/local/bin/sudo; \
+    echo 'exec "$@"' >> /usr/local/bin/sudo; \
+    touch /etc/localtime /etc/timezone; \
+    chown node:node /etc /etc/localtime /etc/timezone; \
+    chmod +x *.sh /usr/local/bin/sudo; \
     ./build_info.sh "Runtime" "$GIT_INFO"; \
     rm -f build_info.sh;
 

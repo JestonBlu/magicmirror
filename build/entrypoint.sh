@@ -6,52 +6,65 @@ config_dir="${base}/config"
 css_dir="${base}/css"
 
 _info() {
-  echo "[entrypoint $(date +%T.%3N)] $1"
+  echo "[entrypoint $(date +%T.%3N)] [INFO]   $1"
 }
+
+_error() {
+  echo "[entrypoint $(date +%T.%3N)] [ERROR]  $1"
+}
+
+# directories should be mounted, if not, create them:
+mkdir -p ${default_dir}
+mkdir -p ${config_dir}
+mkdir -p ${css_dir}
+
+if [ "$STARTENV" = "init" ]; then
+  _info "chown modules and config folder ..."
+  chown -R node:node ${base}/modules &
+  chown -R node:node ${config_dir}
+  chown -R node:node ${css_dir}
+  _info "done."
+
+  exit 0
+fi
 
 [ -z "$TZ" ] && export TZ="$(wget -qO - http://geoip.ubuntu.com/lookup | sed -n -e 's/.*<TimeZone>\(.*\)<\/TimeZone>.*/\1/p')"
 
 if [ -z "$TZ" ]; then
   _info "***WARNING*** could not set timezone, please set TZ variable in docker-compose.yml, see https://khassel.gitlab.io/magicmirror/configuration/#timezone"
 else
-  sudo ln -fs /usr/share/zoneinfo/$TZ /etc/localtime
-  sudo sh -c "echo $TZ > /etc/timezone"
+  ln -fs /usr/share/zoneinfo/$TZ /etc/localtime
+  echo "$TZ" > /etc/timezone
 fi
 
 [ ! -d "${default_dir}" ] && MM_OVERRIDE_DEFAULT_MODULES=true
 
 if [ "${MM_OVERRIDE_DEFAULT_MODULES}" = "true" ]; then
-  _info "copy default modules to host"
-  sudo rm -rf ${default_dir}
-  sudo mkdir -p ${default_dir}
-  sudo cp -r ${base}/mount_ori/modules/default/. ${default_dir}/
+  if [ -w "${default_dir}" ]; then
+    _info "copy default modules"
+    rm -rf ${default_dir}
+    mkdir -p ${default_dir}
+    cp -r ${base}/mount_ori/modules/default/. ${default_dir}/
+  else
+    _error "No write permission for ${default_dir}, skipping copying default modules"
+  fi
 fi
-
-sudo mkdir -p ${config_dir}
-
-sudo mkdir -p ${css_dir}
 
 [ ! -f "${css_dir}/main.css" ] && MM_OVERRIDE_CSS=true
 
 if [ "${MM_OVERRIDE_CSS}" = "true" ]; then
-  _info "copy css files to host"
-  sudo cp ${base}/mount_ori/css/* ${css_dir}/
-fi
-
-# create css/custom.css file https://github.com/MagicMirrorOrg/MagicMirror/issues/1977
-[ ! -f "${css_dir}/custom.css" ] && sudo touch ${css_dir}/custom.css
-
-if [ -z "$MM_NO_CHOWN" ]; then
-  _info "chown modules and config folder"
-  sudo chown -R node:node ${base}/modules &
-  sudo chown -R node:node ${config_dir}
-  sudo chown -R node:node ${css_dir}
-else
-  _info "skipping chown modules and config folder"
+  if [ -w "${css_dir}" ]; then
+    _info "copy css files"
+    cp ${base}/mount_ori/css/* ${css_dir}/
+    # create css/custom.css file https://github.com/MagicMirrorOrg/MagicMirror/issues/1977
+    [ ! -f "${css_dir}/custom.css" ] && touch ${css_dir}/custom.css
+  else
+    _error "No write permission for ${css_dir}, skipping copying css files"
+  fi
 fi
 
 if [ ! -f "${config_dir}/config.js" ]; then
-  _info "copy default config.js to host"
+  _info "copy default config.js"
   cp ${base}/mount_ori/config/config.js.sample ${config_dir}/config.js
 fi
 
@@ -62,7 +75,7 @@ fi
 
 [ -z "$MM_RESTORE_SCRIPT_CONFIG" ] || (${base}/create_restore_script.sh "$MM_RESTORE_SCRIPT_CONFIG" || true)
 
-if [ "$StartEnv" = "test" ]; then
+if [ "$STARTENV" = "test" ]; then
   set -e
 
   export NODE_ENV=test
@@ -91,9 +104,16 @@ else
     _script="/config/start_script.sh"
   fi
   if [ -n "$_script" ]; then
-    _info "executing script $_script"
-    sudo chmod +x "$_script"
-    . "$_script"
+    if [ ! -x "$_script" ] && [ -w "$_script" ] ; then
+      chmod +x "$_script"
+    fi
+
+    if [ -x "$_script" ]; then
+      _info "executing script $_script"
+      . "$_script"
+    else
+      _error "script $_script is not executable and no permissions to change this"
+    fi
   fi
 
   if [ $# -eq 0 ]; then

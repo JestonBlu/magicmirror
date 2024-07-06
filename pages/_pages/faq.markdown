@@ -47,9 +47,10 @@ USER node
 
 This is the preferred solution if you need only a few dependencies and start time of MagicMirror doesn't matter.
 
-For this you have to write a `start_script.sh` file and put this beside your `docker-compose.yml` file. Additionally the `start_script.sh` file must be mapped into the container so you need an extra line in the `volumes` section of your `docker-compose.yml` file:
+For this you have to write a `start_script.sh` file and put this beside your `docker-compose.yml` file. Additionally the `start_script.sh` file must be mapped into the container so you need an extra line in the `volumes` section of your `docker-compose.yml` file and add the root user to be able to install packages:
 
 ```yaml
+    user: root
     volumes:
       - ./start_script.sh:/opt/magic_mirror/start_script.sh
 ```
@@ -58,8 +59,8 @@ Here an example for the content of `start_script.sh`. If you want to use [MMM-Se
 
 ```bash
 #!/bin/sh
-sudo apt-get update
-sudo apt-get install -y iputils-ping
+apt-get update
+apt-get install -y iputils-ping
 ```
 
 ### Use the `fat` image
@@ -68,12 +69,10 @@ Since release `v2.17.1` a new image `karsten13/magicmirror:fat` is provided. Thi
 
 ## How to start MagicMirror without using `docker-compose.yml` files?
 
-If you don't want to use `docker-compose.yml` files yo can start and stop your container with `docker run` commands. For starting the container you have to translate the `docker-compose.yml` file into a `docker run ...` command. Here an example:
+If you don't want to use `docker-compose.yml` files you can start and stop your container with `docker run` commands. For starting the container you have to translate the `docker-compose.yml` file into a `docker run ...` command. Here an example:
 
 `docker-compose.yml`:
 ```yaml
-version: '3'
-
 services:
   magicmirror:
     container_name: mm
@@ -85,10 +84,6 @@ services:
       - ../mounts/modules:/opt/magic_mirror/modules
       - ../mounts/css:/opt/magic_mirror/css
     restart: unless-stopped
-    command: 
-      - npm
-      - run
-      - server
 ```
 
 Corresponding `docker run` command:
@@ -101,7 +96,7 @@ docker run  -d \
     --volume ~/magicmirror/mounts/modules:/opt/magic_mirror/modules \
     --volume ~/magicmirror/mounts/css:/opt/magic_mirror/css \
     --name mm \
-    karsten13/magicmirror:latest npm run server
+    karsten13/magicmirror:latest
 ```
 
 You can stop and remove the container with `docker rm -f mm`.
@@ -118,7 +113,7 @@ So how to handle this?
 
 The short story: Copy the file from inside the container to a directory on the host. Add a volume mount to the `docker-compose.yml` which mounts the local file back into the container. Now you can edit the file on the host and the changes are provided to the container. No problem if you need to restart the container.
 
-The long story with example: In MagicMirror v2.11.0 is a bug which stops the MMM-Remote-Control to work ([see](https://github.com/Jopyth/MMM-Remote-Control/issues/185#issuecomment-608600298)). So to solve this problem the file `js/socketclient.js` must be patched.
+The long story with example: In MagicMirror v2.11.0 was a bug which stops the MMM-Remote-Control to work ([see](https://github.com/Jopyth/MMM-Remote-Control/issues/185#issuecomment-608600298)). So to solve this problem we patched the file `js/socketclient.js`.
 
 To get the file from the container to the host (the container must be running) goto `~/magicmirror/run` and execute `docker cp mm:/opt/magic_mirror/js/socketclient.js .`
 
@@ -129,8 +124,6 @@ You can now edit this file and do your changes.
 For getting the changes back into the container you have to edit the `docker-compose.yml` and insert a new volume mount, in the following example this is the first line under `volumes:`:
 
 ```yaml
-version: '3'
-
 services:
   magicmirror:
     container_name: mm
@@ -150,16 +143,7 @@ Thats it. If you need to restart the MagicMirror container just execute `docker 
 
 If an error occurs which force MagicMirror to quit then this will restart the container again and again. You can try to catch the logs with `docker logs mm` but this is not really a solution.
 
-For debugging you can change the `command` section in your `docker-compose.yml` from
-
-```yaml
-    command: 
-      - npm
-      - run
-      - server
-```
-
-to 
+For debugging you can add a `command` section in your `docker-compose.yml`:
 
 ```yaml
     command: 
@@ -230,11 +214,9 @@ ENTRYPOINT ["/usr/bin/X", ":0", "-nolisten", "tcp", "vt1"]
 
 Now build the image running `docker build -t xserver:latest .`. After this there should be a local docker image `xserver:latest` on your machine.
 
-For running MagicMirror we need an image which contains electron so I use my debug image `registry.gitlab.com/khassel/magicmirror:develop_debug` in the following `docker-compose.yml` file:
+For running MagicMirror we need an image which contains electron so I use my fat image in the following `docker-compose.yml` file:
 
 ```yaml
-version: '3'
-
 services:
   xserver:
     container_name: xserver
@@ -246,7 +228,7 @@ services:
       DISPLAY: unix:0.0
   magicmirror:
     container_name: mm
-    image: registry.gitlab.com/khassel/magicmirror:develop_debug
+    image: karsten13/magicmirror:fat
     volumes:
       - ../mounts/config:/opt/magic_mirror/config:Z
       - ../mounts/modules:/opt/magic_mirror/modules:Z
@@ -256,10 +238,6 @@ services:
       DISPLAY: unix:0.0
     shm_size: "128mb"
     restart: unless-stopped
-    command:
-      - npm
-      - run
-      - start
 ```
 
 Starting this file will create 2 containers and MagicMirror will show up in the Virtual Box Window.

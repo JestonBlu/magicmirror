@@ -1,5 +1,3 @@
-version: '3'
-
 services:
   magicmirror:
     container_name: mm

@@ -1,26 +1,32 @@
-version: '3'
+x-common: &common
+  image: karsten13/magicmirror:latest
+  volumes:
+    - ../mounts/config:/opt/magic_mirror/config
+    - ../mounts/modules:/opt/magic_mirror/modules
+    - ../mounts/css:/opt/magic_mirror/css
 
 services:
+  init:
+    <<: *common
+    container_name: init
+    user: root
+    environment:
+      STARTENV: init
   magicmirror:
+    <<: *common
     container_name: mm
-    image: karsten13/magicmirror:latest
+    depends_on:
+      init:
+        condition: service_completed_successfully
     ports:
       - "8080:8080"
-    volumes:
-      - ../mounts/config:/opt/magic_mirror/config
-      - ../mounts/modules:/opt/magic_mirror/modules
-      - ../mounts/css:/opt/magic_mirror/css
     restart: unless-stopped
-    command:
-      - npm
-      - run
-      - server
-
   mmpm:
     container_name: mmpm
     image: karsten13/mmpm:latest
     depends_on:
-      - magicmirror
+      magicmirror:
+        condition: service_started
     ports:
       - "7890:7890"
       - "7891:7891"

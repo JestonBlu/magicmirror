@@ -1,6 +1,19 @@
-version: '3'
+x-common: &common
+  image: karsten13/magicmirror:fedora
+  volumes:
+    - ../mounts/config:/opt/magic_mirror/config
+    - ../mounts/modules:/opt/magic_mirror/modules
+    - ../mounts/css:/opt/magic_mirror/css
+    - /tmp/.X11-unix:/tmp/.X11-unix:z
+    - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket:z
 
 services:
+  init:
+    <<: *common
+    container_name: init
+    user: root
+    environment:
+      STARTENV: init
   xserver:
     container_name: xserver
     image: karsten13/xserver:latest
@@ -10,18 +23,15 @@ services:
       - /run/udev/data:/run/udev/data:z
     environment:
       DISPLAY: unix:0.0
-    restart: always
+    restart: unless-stopped
   magicmirror:
     container_name: mm
+    <<: *common
     depends_on:
-      - xserver
-    image: karsten13/magicmirror:fedora
-    volumes:
-      - ../mounts/config:/opt/magic_mirror/config:z
-      - ../mounts/modules:/opt/magic_mirror/modules:z
-      - ../mounts/css:/opt/magic_mirror/css:z
-      - /tmp/.X11-unix:/tmp/.X11-unix:z
-      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket:z
+      init:
+        condition: service_completed_successfully
+      xserver:
+        condition: service_started
     privileged: true # avoids dbus errors in logs
     devices:
       - /dev/gpiochip0
@@ -29,8 +39,4 @@ services:
     environment:
       DISPLAY: unix:0.0
     shm_size: "128mb"
-    restart: always
-    command:
-      - npm
-      - run
-      - start
+    restart: unless-stopped

@@ -20,7 +20,7 @@ WORKDIR /home/node
 ENV NODE_ENV="test" \
     ELECTRON_DISABLE_SANDBOX=1 \
     DBUS_SESSION_BUS_ADDRESS="unix:path=/var/run/dbus/system_bus_socket" \
-    StartEnv="test"
+    STARTENV="test"
 
 ARG BuildRef
 ARG GitRepo

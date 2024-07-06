@@ -42,7 +42,7 @@ cd ./magicmirror/run
 cp clientonly.yml docker-compose.yml
 ```
 
-> ⚠️ You have to edit the `docker-compose.yml` and substitute the address and port parameters with your own values.
+> ⚠️ You have to edit the `docker-compose.yml` if you are running scenario **server** and want to use another port.
 
 ## Start MagicMirror²
 

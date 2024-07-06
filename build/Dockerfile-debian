@@ -15,9 +15,8 @@ WORKDIR /opt/magic_mirror
 COPY *.sh /opt/magic_mirror/
 COPY --from=builder --chown=node:node /opt/magic_mirror /opt/magic_mirror
 
-# procps, arp-scan and sudo needed for the module MMM-NetworkScanner
-# sudo needed for the module MMM-Remote-Control
-# sudo needed for cp in entrypoint
+# procps, arp-scan needed for the module MMM-NetworkScanner
+# modules which needs sudo must be run as root, use `user: root` in docker-compose.yaml
 ARG GIT_INFO
 ARG buildarch
 ARG NODE_ENV
@@ -27,7 +26,7 @@ ARG opt
 ARG CONTAINER_PCK_REG_TOKEN
 RUN set -e; \
     apt-get update; \
-    DEBIAN_FRONTEND=noninteractive apt-get -qy --no-install-recommends install git nano sudo openssl ca-certificates wget tini gnupg; \
+    DEBIAN_FRONTEND=noninteractive apt-get -qy --no-install-recommends install git nano openssl ca-certificates wget tini gnupg; \
     if [ "${opt}" = "oy" ]; then \
       _pck="${_pck} libgtk-3-0 libx11-xcb-dev libnss3-dev libxss1 libxtst6 libasound2 libdrm2 libgbm1 libxshmfence1 fonts-arphic-uming procps arp-scan"; \
       if [ "${buildarch}" != "linux/amd64" ]; then \
@@ -40,7 +39,7 @@ RUN set -e; \
         _pck="${_pck} libraspberrypi-bin libgl1-mesa-dri libglapi-mesa libsensors5 libdrm-radeon1 libelf1 libdrm-amdgpu1 libdrm-nouveau2 x11-xserver-utils libgpiod-dev gpiod"; \
         wget https://archive.raspbian.org/raspbian.public.key -O - | apt-key add -; \
         echo 'deb http://raspbian.raspberrypi.org/raspbian/ '${DEBIAN_VERSION}' main contrib non-free rpi' | tee -a /etc/apt/sources.list; \
-        wget -O - http://archive.raspberrypi.org/debian/raspberrypi.gpg.key | sudo apt-key add -; \
+        wget -O - http://archive.raspberrypi.org/debian/raspberrypi.gpg.key | apt-key add -; \
         echo 'deb http://archive.raspberrypi.org/debian/ '${DEBIAN_VERSION}' main ui' | tee -a /etc/apt/sources.list.d/raspi.list; \
         apt-get update; \
       fi; \
@@ -64,9 +63,11 @@ RUN set -e; \
     apt-get clean; \
     rm -rf /var/lib/apt/lists/*; \
     usermod -a -G video node; \
-    echo "node ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers; \
-    chmod +x *.sh; \
+    echo "#!/bin/bash" > /usr/local/bin/sudo; \
+    echo 'exec "$@"' >> /usr/local/bin/sudo; \
+    chmod +x *.sh /usr/local/bin/sudo; \
     chown node:node *.sh; \
+    chown node:node /etc /etc/localtime /etc/timezone; \
     c_rehash; \
     groupadd --gid 997 gpio; \
     usermod -a -G gpio node; \

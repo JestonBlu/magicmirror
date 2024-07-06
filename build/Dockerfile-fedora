@@ -6,7 +6,8 @@ LABEL maintainer="Karsten Hassel"
 
 RUN set -e; \
     useradd -u 1000 node; \
-    echo "node ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers;
+    touch /etc/timezone; \
+    chown node:node /etc /etc/localtime /etc/timezone;
 
 WORKDIR /opt/magic_mirror
 
