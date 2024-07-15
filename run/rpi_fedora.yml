@@ -1,32 +1,28 @@
-x-common: &common
-  image: karsten13/magicmirror:fedora
-  volumes:
-    - ../mounts/config:/opt/magic_mirror/config
-    - ../mounts/modules:/opt/magic_mirror/modules
-    - ../mounts/css:/opt/magic_mirror/css
-    - /tmp/.X11-unix:/tmp/.X11-unix:z
-    - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket:z
-
 services:
   init:
-    <<: *common
     container_name: init
     user: root
     environment:
       STARTENV: init
+    extends:
+      file: includes/fedora.yaml
+      service: fedora
   xserver:
     container_name: xserver
     image: karsten13/xserver:latest
-    privileged: true
     volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix:z
       - /run/udev/data:/run/udev/data:z
-    environment:
-      DISPLAY: unix:0.0
     restart: unless-stopped
+    extends:
+      file: includes/fedora.yaml
+      service: fedora
   magicmirror:
     container_name: mm
-    <<: *common
+    extends:
+      file: includes/fedora.yaml
+      service: fedora
+    volumes:
+      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket:z
     depends_on:
       init:
         condition: service_completed_successfully
@@ -36,7 +32,5 @@ services:
     devices:
       - /dev/gpiochip0
       - /dev/gpiochip1
-    environment:
-      DISPLAY: unix:0.0
     shm_size: "128mb"
     restart: unless-stopped

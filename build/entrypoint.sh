@@ -1,7 +1,8 @@
 #!/bin/sh
 
 base="/opt/magic_mirror"
-default_dir="${base}/modules/default"
+modules_dir="${base}/modules"
+default_dir="${modules_dir}/default"
 config_dir="${base}/config"
 css_dir="${base}/css"
 
@@ -14,13 +15,13 @@ _error() {
 }
 
 # directories should be mounted, if not, create them:
-mkdir -p ${default_dir}
+mkdir -p ${modules_dir}
 mkdir -p ${config_dir}
 mkdir -p ${css_dir}
 
 if [ "$STARTENV" = "init" ]; then
   _info "chown modules and config folder ..."
-  chown -R node:node ${base}/modules &
+  chown -R node:node ${modules_dir} &
   chown -R node:node ${config_dir}
   chown -R node:node ${css_dir}
   _info "done."
@@ -64,8 +65,12 @@ if [ "${MM_OVERRIDE_CSS}" = "true" ]; then
 fi
 
 if [ ! -f "${config_dir}/config.js" ]; then
-  _info "copy default config.js"
-  cp ${base}/mount_ori/config/config.js.sample ${config_dir}/config.js
+  if [ -w "${config_dir}" ]; then
+    _info "copy default config.js"
+    cp ${base}/mount_ori/config/config.js.sample ${config_dir}/config.js
+  else
+    _error "No write permission for ${config_dir}, skipping copying config.js"
+  fi
 fi
 
 if [ "$MM_SHOW_CURSOR" = "true" ]; then
