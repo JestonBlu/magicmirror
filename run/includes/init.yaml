@@ -1,0 +1,9 @@
+services:
+  init:
+    container_name: init
+    user: root
+    environment:
+      STARTENV: init
+    extends:
+      service: no_init
+      file: base.yaml

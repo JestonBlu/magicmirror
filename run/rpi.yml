@@ -1,23 +1,11 @@
-# if you want to use https://github.com/Bee-Mar/mmpm you can add 
-# the mmpm container to this setup by commenting out the following lines:
-# include:
-#   - includes/mmpm.yaml
+include:
+  - includes/${MM_INIT}.yaml
+  - includes/${MM_MMPM}.yaml
 
 services:
-  init:
-    container_name: init
-    user: root
-    environment:
-      STARTENV: init
-    extends:
-      file: includes/base.yaml
-      service: base
   magicmirror:
     container_name: mm
-    depends_on:
-      init:
-        condition: service_completed_successfully
     restart: unless-stopped
     extends:
-      file: includes/rpi.yaml
-      service: rpi
+      file: includes/base.yaml
+      service: rpi_${MM_INIT}

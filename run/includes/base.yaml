@@ -1,7 +1,33 @@
 services:
-  base:
+  no_init:
     image: karsten13/magicmirror:latest
     volumes:
       - ../mounts/config:/opt/magic_mirror/config
       - ../mounts/modules:/opt/magic_mirror/modules
       - ../mounts/css:/opt/magic_mirror/css
+  init:
+    depends_on:
+      init:
+        condition: service_completed_successfully
+    extends:
+      service: no_init
+  rpi_no_init:
+    extends:
+      service: no_init
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - $HOME/.Xauthority:/home/node/.Xauthority
+      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
+    privileged: true # avoids dbus errors in logs
+    devices:
+      - /dev/vchiq
+    environment:
+      DISPLAY: unix:0.0
+    network_mode: host
+    shm_size: "128mb"
+  rpi_init:
+    depends_on:
+      init:
+        condition: service_completed_successfully
+    extends:
+      service: rpi_no_init
