@@ -23,7 +23,7 @@ This make sense for keeping secrets (e.g. passwords, api keys) out of the config
       MY_SECRET: "abc"
 ```
 
-You can also use an `.env` file (in the same directory as your `docker-compose.yml`) to define your secrets there, for more info on this see [the docker compose reference](https://docs.docker.com/compose/environment-variables/).
+You can also use an `.env` file (in the same directory as your `compose.yaml`) to define your secrets there, for more info on this see [the docker compose reference](https://docs.docker.com/compose/environment-variables/).
 
 > 👉 When the container starts, the `config.js` will be created using the `config.js.template`. An existing `config.js` will be overwritten and saved as `config.js-old`
 
@@ -35,7 +35,7 @@ For installing modules refer to the module website, the default modules are desc
 modules' appearance. CSS basics are documented
 [here](https://forum.magicmirror.builders/topic/6808/css-101-getting-started-with-css-and-understanding-how-css-works), among many other places.
 
-> 👉 The css-files in the `css` folder which exists in the MagicMirror git repo (currently only `main.css`) are overriden with the original file from inside the container with every restart. So if you need to change this file, you must stop this default copying by setting the environment variable `MM_OVERRIDE_CSS` to `false` in the `docker-compose.yml` file:
+> 👉 The css-files in the `css` folder which exists in the MagicMirror git repo (currently only `main.css`) are overriden with the original file from inside the container with every restart. So if you need to change this file, you must stop this default copying by setting the environment variable `MM_OVERRIDE_CSS` to `false` in the `compose.yaml` file:
 ```yaml
     environment:
       MM_OVERRIDE_CSS: "false"
@@ -45,7 +45,7 @@ modules' appearance. CSS basics are documented
 
 The default modules of MagicMirror are located in the folder `~/magicmirror/mounts/modules`. These modules are maintained in the MagicMirror project and not - as other modules - in own git repositories. So if they are mounted the first time outside the container this version remains on the host and would never updated again. To prevent this, the docker container overrides the `default` modules folder with the versions from inside the container.
 
-If someone does not agree with this procedure he can avoid the copy process by adding the environment variable `MM_OVERRIDE_DEFAULT_MODULES` to `false` in his `docker-compose.yml` file:
+If someone does not agree with this procedure he can avoid the copy process by adding the environment variable `MM_OVERRIDE_DEFAULT_MODULES` to `false` in his `compose.yaml` file:
 ```yaml
     environment:
       MM_OVERRIDE_DEFAULT_MODULES: "false"
@@ -53,7 +53,7 @@ If someone does not agree with this procedure he can avoid the copy process by a
 
 ## Timezone
 
-The container tries to get the timezone by location. If this is not possible or wrong, you can set the timezone to a different value by editing the `docker-compose.yml` file. You have to add the timezone as environment variable:
+The container tries to get the timezone by location. If this is not possible or wrong, you can set the timezone to a different value by editing the `compose.yaml` file. You have to add the timezone as environment variable:
 
 ```yaml
     environment:
@@ -62,7 +62,7 @@ The container tries to get the timezone by location. If this is not possible or 
 
 ## Mouse cursor
 
-The mouse cursor is diabled by default. You can enable it by adding the environment variable `MM_SHOW_CURSOR` to `true` in your `docker-compose.yml` file:
+The mouse cursor is diabled by default. You can enable it by adding the environment variable `MM_SHOW_CURSOR` to `true` in your `compose.yaml` file:
 ```yaml
     environment:
       MM_SHOW_CURSOR: "true"
@@ -74,6 +74,6 @@ The container runs with userid=1000, this is normally the userid of the pi user.
 
 The volumes on the host (~/magicmirror/mounts/*) are created at first start from the docker daemon with userid=0 (root), so we have to correct the permissions so the container can access the volumes. This is done by a init container which is started before the mm container.
 
-If you don't want or need this behavior you can remove the init container from the `docker-compose.yml` file.
+If you don't want or need this behavior you can remove the init container from the `compose.yaml` file.
 
-The container has no root permissions and no `sudo` installed, so if you need such permissions you can add `user: root` to the `docker-compose.yml` file.
+The container has no root permissions and no `sudo` installed, so if you need such permissions you can add `user: root` to the `compose.yaml` file.

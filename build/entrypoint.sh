@@ -32,7 +32,7 @@ fi
 [ -z "$TZ" ] && export TZ="$(wget -qO - http://geoip.ubuntu.com/lookup | sed -n -e 's/.*<TimeZone>\(.*\)<\/TimeZone>.*/\1/p')"
 
 if [ -z "$TZ" ]; then
-  _info "***WARNING*** could not set timezone, please set TZ variable in docker-compose.yml, see https://khassel.gitlab.io/magicmirror/configuration/#timezone"
+  _info "***WARNING*** could not set timezone, please set TZ variable in compose.yaml, see https://khassel.gitlab.io/magicmirror/configuration/#timezone"
 else
   ln -fs /usr/share/zoneinfo/$TZ /etc/localtime
   echo "$TZ" > /etc/timezone

@@ -40,9 +40,9 @@ So update your `docker-compose.yaml` with the new image and restart the containe
 
 But the PIR-Sensor still does'nt work, because the used python script fails with: `RuntimeError: No access to /dev/mem.  Try running as root!`.
 
-To get this working you have to add an additional device into your `docker-compose.yml` in the `devices:` section: ` - /dev/gpiomem`.
+To get this working you have to add an additional device into your `compose.yaml` in the `devices:` section: ` - /dev/gpiomem`.
 
-Your `docker-compose.yml` file should now look like:
+Your `compose.yaml` file should now look like:
 
 ```yaml
 services:

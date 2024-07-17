@@ -3,7 +3,7 @@
 mkdir -p "$HOME/scripts"
 _log="$HOME/scripts/start.log"
 if [[ ! -f "$HOME/magicmirror/run/docker-compose.yml" ]]; then
-  cp -v "$HOME/magicmirror/run/rpi.yml" "$HOME/magicmirror/run/docker-compose.yml" &>> $_log
+  cp -v "$HOME/magicmirror/run/rpi.yaml" "$HOME/magicmirror/run/docker-compose.yml" &>> $_log
   mkdir -p "$HOME/magicmirror/mounts"
 else
   echo "docker-compose.yml exists" &>> $_log

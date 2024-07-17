@@ -47,7 +47,7 @@ USER node
 
 This is the preferred solution if you need only a few dependencies and start time of MagicMirror doesn't matter.
 
-For this you have to write a `start_script.sh` file and put this beside your `docker-compose.yml` file. Additionally the `start_script.sh` file must be mapped into the container so you need an extra line in the `volumes` section of your `docker-compose.yml` file and add the root user to be able to install packages:
+For this you have to write a `start_script.sh` file and put this beside your `compose.yaml` file. Additionally the `start_script.sh` file must be mapped into the container so you need an extra line in the `volumes` section of your `compose.yaml` file and add the root user to be able to install packages:
 
 ```yaml
     user: root
@@ -67,11 +67,11 @@ apt-get install -y iputils-ping
 
 Since release `v2.17.1` a new image `karsten13/magicmirror:fat` is provided. This image is based on `debian:latest` (not on `debian:slim` as the other images) and contains already many dependencies, e.g. python. You can try this image if you need packages missing in the normal images. Be aware that this image is really `fat` so pulling this image takes longer, especially on a raspberry pi.
 
-## How to start MagicMirror without using `docker-compose.yml` files?
+## How to start MagicMirror without using `compose.yaml` files?
 
-If you don't want to use `docker-compose.yml` files you can start and stop your container with `docker run` commands. For starting the container you have to translate the `docker-compose.yml` file into a `docker run ...` command. Here an example:
+If you don't want to use `compose.yaml` files you can start and stop your container with `docker run` commands. For starting the container you have to translate the `compose.yaml` file into a `docker run ...` command. Here an example:
 
-`docker-compose.yml`:
+`compose.yaml`:
 ```yaml
 services:
   magicmirror:
@@ -111,7 +111,7 @@ This solution works as long as no restart of MagicMirror is required. After a re
 
 So how to handle this?
 
-The short story: Copy the file from inside the container to a directory on the host. Add a volume mount to the `docker-compose.yml` which mounts the local file back into the container. Now you can edit the file on the host and the changes are provided to the container. No problem if you need to restart the container.
+The short story: Copy the file from inside the container to a directory on the host. Add a volume mount to the `compose.yaml` which mounts the local file back into the container. Now you can edit the file on the host and the changes are provided to the container. No problem if you need to restart the container.
 
 The long story with example: In MagicMirror v2.11.0 was a bug which stops the MMM-Remote-Control to work ([see](https://github.com/Jopyth/MMM-Remote-Control/issues/185#issuecomment-608600298)). So to solve this problem we patched the file `js/socketclient.js`.
 
@@ -121,7 +121,7 @@ Now the file `socketclient.js` is located under `~/magicmirror/run`, you can do 
 
 You can now edit this file and do your changes.
 
-For getting the changes back into the container you have to edit the `docker-compose.yml` and insert a new volume mount, in the following example this is the first line under `volumes:`:
+For getting the changes back into the container you have to edit the `compose.yaml` and insert a new volume mount, in the following example this is the first line under `volumes:`:
 
 ```yaml
 services:
@@ -143,7 +143,7 @@ Thats it. If you need to restart the MagicMirror container just execute `docker 
 
 If an error occurs which force MagicMirror to quit then this will restart the container again and again. You can try to catch the logs with `docker logs mm` but this is not really a solution.
 
-For debugging you can add a `command` section in your `docker-compose.yml`:
+For debugging you can add a `command` section in your `compose.yaml`:
 
 ```yaml
     command: 
@@ -190,7 +190,7 @@ This fix is persistent because the `modules` folder is mounted to the host. If y
 
 ## Running on a raspberry pi ends with a white or black screen after a while
 
-I had this behavior running the module `MMM-RAIN-MAP` which is fetching a greater amount of images for the map. So if you are running modules which needs a greater amount of shared memory, you have to increase `shm_size` in the `docker-compose.yml`. The default there is `shm_size: "128mb"` so edit this value and restart the container with `docker compose up -d`.
+I had this behavior running the module `MMM-RAIN-MAP` which is fetching a greater amount of images for the map. So if you are running modules which needs a greater amount of shared memory, you have to increase `shm_size` in the `compose.yaml`. The default there is `shm_size: "128mb"` so edit this value and restart the container with `docker compose up -d`.
 
 ## Running on an operating system without desktop
 
@@ -214,7 +214,7 @@ ENTRYPOINT ["/usr/bin/X", ":0", "-nolisten", "tcp", "vt1"]
 
 Now build the image running `docker build -t xserver:latest .`. After this there should be a local docker image `xserver:latest` on your machine.
 
-For running MagicMirror we need an image which contains electron so I use my fat image in the following `docker-compose.yml` file:
+For running MagicMirror we need an image which contains electron so I use my fat image in the following `compose.yaml` file:
 
 ```yaml
 services:

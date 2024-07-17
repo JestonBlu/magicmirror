@@ -27,22 +27,22 @@ Now cd into the new directory `magicmirror/run` and copy the yml-file depending 
 For scenario **server** ☝️:
 ```bash
 cd ./magicmirror/run
-cp serveronly.yml docker-compose.yml
+cp serveronly.yaml compose.yaml
 ```
 
 For scenario **electron** ✌️:
 ```bash
 cd ./magicmirror/run
-cp rpi.yml docker-compose.yml
+cp rpi.yaml compose.yaml
 ```
 
 For scenario **client** 👌:
 ```bash
 cd ./magicmirror/run
-cp clientonly.yml docker-compose.yml
+cp clientonly.yaml compose.yaml
 ```
 
-> ⚠️ You have to edit the `docker-compose.yml` if you are running scenario **server** and want to use another port.
+> ⚠️ You have to edit the `compose.yaml` if you are running scenario **server** and want to use another port.
 
 ## Start MagicMirror²
 
