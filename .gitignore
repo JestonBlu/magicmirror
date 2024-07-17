@@ -1,4 +1,6 @@
 *.log
 mounts/
-run/docker-compose.yml
+run/*compose.yaml
+run/*compose.yml
 Gemfile*
+pages/_site

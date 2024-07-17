@@ -98,7 +98,7 @@ else
 
   if [ $# -eq 0 ]; then
     # if no params are provided, add defaults depending if electron is installed:
-    if command -v node_modules/.bin/electron &> /dev/null; then
+    if command -v node_modules/.bin/electron > /dev/null; then
       exec env TZ=$TZ npm start
     else
       exec env TZ=$TZ npm run server
