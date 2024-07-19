@@ -47,7 +47,7 @@ USER node
 
 This is the preferred solution if you need only a few dependencies and start time of MagicMirror doesn't matter.
 
-For this you have to write a `start_script.sh` file and put this beside your `compose.yaml` file. Additionally the `start_script.sh` file must be mapped into the container so you need an extra line in the `volumes` section of your `compose.yaml` file and add the root user to be able to install packages:
+For this you have to write a `start_script.sh` file and put this beside your `compose.yaml` file. Additionally the `start_script.sh` file must be mapped into the container so you need to add a `volumes` section to your `compose.yaml` file and add the root user to be able to install packages:
 
 ```yaml
     user: root
@@ -69,21 +69,59 @@ Since release `v2.17.1` a new image `karsten13/magicmirror:fat` is provided. Thi
 
 ## How to start MagicMirror without using `compose.yaml` files?
 
-If you don't want to use `compose.yaml` files you can start and stop your container with `docker run` commands. For starting the container you have to translate the `compose.yaml` file into a `docker run ...` command. Here an example:
+If you don't want to use `compose.yaml` files you can start and stop your container with `docker run` commands. For starting the container you have to translate the `compose.yaml` file into a `docker run ...` command. As the `compose.yaml` contains includes you can show the expanded content by running `docker compose config`.
 
-`compose.yaml`:
+Here an example, `compose.yaml`:
+
 ```yaml
+include:
+  - includes/${MM_INIT}.yaml
+  - includes/${MM_MMPM}.yaml
+
+services:
+  magicmirror:
+    container_name: mm
+    restart: unless-stopped
+    extends:
+      file: includes/base.yaml
+      service: ${MM_SCENARIO}_${MM_INIT}
+```
+
+Expanded `compose.yaml`, output of `docker compose config`:
+
+```yaml
+name: run
 services:
   magicmirror:
     container_name: mm
     image: karsten13/magicmirror:latest
+    networks:
+      default: null
     ports:
-      - "8080:8080"
-    volumes:
-      - ../mounts/config:/opt/magic_mirror/config
-      - ../mounts/modules:/opt/magic_mirror/modules
-      - ../mounts/css:/opt/magic_mirror/css
+      - mode: ingress
+        target: 8080
+        published: "8080"
+        protocol: tcp
     restart: unless-stopped
+    volumes:
+      - type: bind
+        source: /mnt/z/k13/magicmirror/mounts/config
+        target: /opt/magic_mirror/config
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/z/k13/magicmirror/mounts/modules
+        target: /opt/magic_mirror/modules
+        bind:
+          create_host_path: true
+      - type: bind
+        source: /mnt/z/k13/magicmirror/mounts/css
+        target: /opt/magic_mirror/css
+        bind:
+          create_host_path: true
+networks:
+  default:
+    name: run_default
 ```
 
 Corresponding `docker run` command:
@@ -91,7 +129,7 @@ Corresponding `docker run` command:
 ```yaml
 docker run  -d \
     --publish 8080:8080 \
-    --restart always \
+    --restart unless-stopped \
     --volume ~/magicmirror/mounts/config:/opt/magic_mirror/config \
     --volume ~/magicmirror/mounts/modules:/opt/magic_mirror/modules \
     --volume ~/magicmirror/mounts/css:/opt/magic_mirror/css \
@@ -121,20 +159,11 @@ Now the file `socketclient.js` is located under `~/magicmirror/run`, you can do 
 
 You can now edit this file and do your changes.
 
-For getting the changes back into the container you have to edit the `compose.yaml` and insert a new volume mount, in the following example this is the first line under `volumes:`:
+For getting the changes back into the container you have to edit the `compose.yaml` and insert a new volume mount under `volumes:`:
 
 ```yaml
-services:
-  magicmirror:
-    container_name: mm
-    image: karsten13/magicmirror:latest
-    ports:
-      - "8080:8080"
     volumes:
       - ./socketclient.js:/opt/magic_mirror/js/socketclient.js
-      - ../mounts/config:/opt/magic_mirror/config
-      - ../mounts/modules:/opt/magic_mirror/modules
-    ...
 ```
 
 Thats it. If you need to restart the MagicMirror container just execute `docker compose up -d`.
@@ -214,10 +243,16 @@ ENTRYPOINT ["/usr/bin/X", ":0", "-nolisten", "tcp", "vt1"]
 
 Now build the image running `docker build -t xserver:latest .`. After this there should be a local docker image `xserver:latest` on your machine.
 
-For running MagicMirror we need an image which contains electron so I use my fat image in the following `compose.yaml` file:
+For running MagicMirror we need the electron scenario and an image which contains electron (e.g. my fat image). So change following values in the `.env` file
+
+```bash
+MM_SCENARIO="electron"
+MM_IMAGE="karsten13/magicmirror:fat"
+```
+
+and add the `xserver` to the `compose.yaml` file (in the `services` section):
 
 ```yaml
-services:
   xserver:
     container_name: xserver
     image: xserver:latest
@@ -226,18 +261,6 @@ services:
       - /tmp/.X11-unix:/tmp/.X11-unix:z
     environment:
       DISPLAY: unix:0.0
-  magicmirror:
-    container_name: mm
-    image: karsten13/magicmirror:fat
-    volumes:
-      - ../mounts/config:/opt/magic_mirror/config:Z
-      - ../mounts/modules:/opt/magic_mirror/modules:Z
-      - ../mounts/css:/opt/magic_mirror/css:Z
-      - /tmp/.X11-unix:/tmp/.X11-unix:z
-    environment:
-      DISPLAY: unix:0.0
-    shm_size: "128mb"
-    restart: unless-stopped
 ```
 
 Starting this file will create 2 containers and MagicMirror will show up in the Virtual Box Window.

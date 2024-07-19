@@ -36,33 +36,15 @@ But the module will not work with the default image `karsten13/magicmirror:lates
 
 The module needs `python3` to work which is not installed in `karsten13/magicmirror:latest`. We could build a custom image on top and install `python3` but the simpler solution is to use `karsten13/magicmirror:fat` where `python3` is already included.
 
-So update your `docker-compose.yaml` with the new image and restart the container.
+So update `MM_IMAGE` in your `.env` file with the new image and restart the container.
 
 But the PIR-Sensor still does'nt work, because the used python script fails with: `RuntimeError: No access to /dev/mem.  Try running as root!`.
 
-To get this working you have to add an additional device into your `compose.yaml` in the `devices:` section: ` - /dev/gpiomem`.
-
-Your `compose.yaml` file should now look like:
+To get this working you have to add an additional device into your `compose.yaml`:
 
 ```yaml
-services:
-  magicmirror:
-    container_name: mm
-    image: karsten13/magicmirror:fat
-    volumes:
-      - ../mounts/config:/opt/magic_mirror/config
-      - ../mounts/modules:/opt/magic_mirror/modules
-      - ../mounts/css:/opt/magic_mirror/css
-      - /tmp/.X11-unix:/tmp/.X11-unix
-      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
     devices:
-      - /dev/vchiq
       - /dev/gpiomem
-    environment:
-      DISPLAY: unix:0.0
-    network_mode: host
-    shm_size: "128mb"
-    restart: unless-stopped
 ```
 
 After restarting the container our PIR-Sensor should now work, you should see the countdown in the upper right corner.

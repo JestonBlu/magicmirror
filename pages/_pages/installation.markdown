@@ -22,27 +22,35 @@ Open a shell in your home directory and run
 git clone https://gitlab.com/khassel/magicmirror.git
 ```
 
-Now cd into the new directory `magicmirror/run` and copy the yml-file depending on the scenario.
+Now cd into the new directory `magicmirror/run` and copy the file with the environment variable:
+
+```bash
+cd ./magicmirror/run
+cp original.env .env
+```
+
+Depending on the scenario you have to edit the `.env` file:
 
 For scenario **server** ☝️:
 ```bash
-cd ./magicmirror/run
-cp serveronly.yaml compose.yaml
+MM_SCENARIO="server"
 ```
+
+This is already the default.
 
 For scenario **electron** ✌️:
 ```bash
-cd ./magicmirror/run
-cp rpi.yaml compose.yaml
+MM_SCENARIO="electron"
 ```
 
 For scenario **client** 👌:
 ```bash
-cd ./magicmirror/run
-cp clientonly.yaml compose.yaml
+MM_SCENARIO="client"
+MM_INIT="no_init"
 ```
 
-> ⚠️ You have to edit the `compose.yaml` if you are running scenario **server** and want to use another port.
+> ⚠️ You have to edit the value `MM_SERVER_PORTS` in the `.env` file if you are running scenario **server** and want to use another port.
+> ⚠️ You have to edit the values `MM_CLIENT_PORT` and `MM_CLIENT_ADDRESS` in the `.env` file if you are running scenario **client**.
 
 ## Start MagicMirror²
 

@@ -5,5 +5,5 @@ services:
     environment:
       STARTENV: init
     extends:
-      service: no_init
+      service: base
       file: base.yaml

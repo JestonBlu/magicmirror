@@ -5,9 +5,7 @@ include:
 services:
   magicmirror:
     container_name: mm
-    ports:
-      - "8080:8080"
     restart: unless-stopped
     extends:
       file: includes/base.yaml
-      service: ${MM_INIT}
+      service: ${MM_SCENARIO}_${MM_INIT}

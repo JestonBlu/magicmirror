@@ -23,7 +23,7 @@ This make sense for keeping secrets (e.g. passwords, api keys) out of the config
       MY_SECRET: "abc"
 ```
 
-You can also use an `.env` file (in the same directory as your `compose.yaml`) to define your secrets there, for more info on this see [the docker compose reference](https://docs.docker.com/compose/environment-variables/).
+You can also use the `.env` file (in the same directory as your `compose.yaml`) to define your secrets there, for more info on this see [the docker compose reference](https://docs.docker.com/compose/environment-variables/).
 
 > 👉 When the container starts, the `config.js` will be created using the `config.js.template`. An existing `config.js` will be overwritten and saved as `config.js-old`
 
@@ -74,6 +74,6 @@ The container runs with userid=1000, this is normally the userid of the pi user.
 
 The volumes on the host (~/magicmirror/mounts/*) are created at first start from the docker daemon with userid=0 (root), so we have to correct the permissions so the container can access the volumes. This is done by a init container which is started before the mm container.
 
-If you don't want or need this behavior you can remove the init container from the `compose.yaml` file.
+If you don't want or need this behavior you can remove the init container by setting `MM_INIT="no_init"` in the `.env` file.
 
 The container has no root permissions and no `sudo` installed, so if you need such permissions you can add `user: root` to the `compose.yaml` file.

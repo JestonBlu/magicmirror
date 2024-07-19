@@ -1,19 +1,30 @@
 services:
-  no_init:
-    image: karsten13/magicmirror:latest
+  base:
+    image: ${MM_IMAGE}
     volumes:
-      - ../mounts/config:/opt/magic_mirror/config
-      - ../mounts/modules:/opt/magic_mirror/modules
-      - ../mounts/css:/opt/magic_mirror/css
-  init:
+      - ../../mounts/config:/opt/magic_mirror/config
+      - ../../mounts/modules:/opt/magic_mirror/modules
+      - ../../mounts/css:/opt/magic_mirror/css
+  base_init:
     depends_on:
       init:
         condition: service_completed_successfully
     extends:
-      service: no_init
-  rpi_no_init:
+      service: base
+  server_no_init:
+    ports:
+      - ${MM_SERVER_PORTS}
     extends:
-      service: no_init
+      service: base
+  server_init:
+    depends_on:
+      init:
+        condition: service_completed_successfully
+    extends:
+      service: server_no_init
+  electron_no_init:
+    extends:
+      service: base
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
       - $HOME/.Xauthority:/home/node/.Xauthority
@@ -25,9 +36,19 @@ services:
       DISPLAY: unix:0.0
     network_mode: host
     shm_size: "128mb"
-  rpi_init:
+  electron_init:
     depends_on:
       init:
         condition: service_completed_successfully
     extends:
-      service: rpi_no_init
+      service: electron_no_init
+  client_no_init:
+    image: ${MM_IMAGE}
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket
+    privileged: true # avoids dbus errors in logs
+    environment:
+      DISPLAY: unix:0.0
+    shm_size: "128mb"
+    command: "node clientonly --address ${MM_CLIENT_ADDRESS} --port ${MM_CLIENT_PORT}"
