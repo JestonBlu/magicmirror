@@ -12,6 +12,10 @@ services:
     extends:
       service: base
   server_no_init:
+    environment:
+      MM_OVERRIDE_DEFAULT_MODULES: ${MM_OVERRIDE_DEFAULT_MODULES}
+      MM_OVERRIDE_CSS: ${MM_OVERRIDE_CSS}
+      MM_SHOW_CURSOR: ${MM_SHOW_CURSOR}
     ports:
       - ${MM_SERVER_PORTS}
     extends:
@@ -34,6 +38,9 @@ services:
       - /dev/vchiq
     environment:
       DISPLAY: unix:0.0
+      MM_OVERRIDE_DEFAULT_MODULES: ${MM_OVERRIDE_DEFAULT_MODULES}
+      MM_OVERRIDE_CSS: ${MM_OVERRIDE_CSS}
+      MM_SHOW_CURSOR: ${MM_SHOW_CURSOR}
     network_mode: host
     shm_size: "128mb"
   electron_init:

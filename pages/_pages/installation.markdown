@@ -22,11 +22,12 @@ Open a shell in your home directory and run
 git clone https://gitlab.com/khassel/magicmirror.git
 ```
 
-Now cd into the new directory `magicmirror/run` and copy the file with the environment variable:
+Now cd into the new directory `magicmirror/run` and copy 2 files:
 
 ```bash
 cd ./magicmirror/run
 cp original.env .env
+cp original.compose.yaml compose.yaml
 ```
 
 Depending on the scenario you have to edit the `.env` file:
@@ -50,6 +51,7 @@ MM_INIT="no_init"
 ```
 
 > ⚠️ You have to edit the value `MM_SERVER_PORTS` in the `.env` file if you are running scenario **server** and want to use another port.
+
 > ⚠️ You have to edit the values `MM_CLIENT_PORT` and `MM_CLIENT_ADDRESS` in the `.env` file if you are running scenario **client**.
 
 ## Start MagicMirror²
@@ -89,7 +91,7 @@ You can restart the container with one command `docker compose up -d --force-rec
 
 The MagicMirror²-Project has quarterly releases so every 1st of Jan/Apr/Jul/Oct a new version is released.
 
-This project ist updated weekly because the image contains debian as operating system. To get (security) updates in time the image build is executed every sunday.
+This project ist updated weekly every sunday to get (security) updates of the operating system.
 
 To get the newest image you have to update this locally. Navigate to `~/magicmirror/run` and execute
 

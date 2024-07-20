@@ -139,6 +139,8 @@ docker run  -d \
 
 You can stop and remove the container with `docker rm -f mm`.
 
+> You can look for online tools where you can paste the content of your expanded `compose.yaml` which gives you the corresponding `docker run ...` commands, e.g. [decomposerize](https://www.decomposerize.com/).
+
 ## How to patch a file of MagicMirror?
 
 You may want to test something or fix a bug in MagicMirror and therefore you want to edit a file of the MagicMirror installation.

@@ -35,20 +35,18 @@ For installing modules refer to the module website, the default modules are desc
 modules' appearance. CSS basics are documented
 [here](https://forum.magicmirror.builders/topic/6808/css-101-getting-started-with-css-and-understanding-how-css-works), among many other places.
 
-> 👉 The css-files in the `css` folder which exists in the MagicMirror git repo (currently only `main.css`) are overriden with the original file from inside the container with every restart. So if you need to change this file, you must stop this default copying by setting the environment variable `MM_OVERRIDE_CSS` to `false` in the `compose.yaml` file:
-```yaml
-    environment:
-      MM_OVERRIDE_CSS: "false"
+> 👉 The css-files in the `css` folder which exists in the MagicMirror git repo (currently only `main.css`) are overriden with the original file from inside the container with every restart. So if you need to change this file, you must stop this default copying by setting the environment variable `MM_OVERRIDE_CSS` to `false` in the `.env` file:
+```bash
+MM_OVERRIDE_CSS="false"
 ```
 
 ## Default Modules
 
 The default modules of MagicMirror are located in the folder `~/magicmirror/mounts/modules`. These modules are maintained in the MagicMirror project and not - as other modules - in own git repositories. So if they are mounted the first time outside the container this version remains on the host and would never updated again. To prevent this, the docker container overrides the `default` modules folder with the versions from inside the container.
 
-If someone does not agree with this procedure he can avoid the copy process by adding the environment variable `MM_OVERRIDE_DEFAULT_MODULES` to `false` in his `compose.yaml` file:
-```yaml
-    environment:
-      MM_OVERRIDE_DEFAULT_MODULES: "false"
+If someone does not agree with this procedure he can avoid the copy process by setting the environment variable `MM_OVERRIDE_DEFAULT_MODULES` to `false` in the `.env` file:
+```bash
+MM_OVERRIDE_DEFAULT_MODULES="false"
 ```
 
 ## Timezone
@@ -62,10 +60,9 @@ The container tries to get the timezone by location. If this is not possible or 
 
 ## Mouse cursor
 
-The mouse cursor is diabled by default. You can enable it by adding the environment variable `MM_SHOW_CURSOR` to `true` in your `compose.yaml` file:
-```yaml
-    environment:
-      MM_SHOW_CURSOR: "true"
+The mouse cursor is diabled by default. You can enable it by setting the environment variable `MM_SHOW_CURSOR` to `true` in your `.env` file:
+```bash
+MM_SHOW_CURSOR="true"
 ```
 
 ## Init container and running as root

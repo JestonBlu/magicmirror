@@ -1,7 +1,7 @@
 *.log
 mounts/
 run/*compose.y*
-!run/compose.yaml
+!run/original.compose.yaml
 Gemfile*
 pages/_site
 run/.env
