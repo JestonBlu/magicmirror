@@ -38,7 +38,10 @@ else
   echo "$TZ" > /etc/timezone
 fi
 
-[ ! -d "${default_dir}" ] && MM_OVERRIDE_DEFAULT_MODULES=true
+if [ ! -d "${default_dir}" ]; then
+  MM_OVERRIDE_DEFAULT_MODULES=true
+  mkdir -p ${default_dir}
+fi
 
 if [ "${MM_OVERRIDE_DEFAULT_MODULES}" = "true" ]; then
   if [ -w "${default_dir}" ]; then
