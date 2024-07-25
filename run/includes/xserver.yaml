@@ -1,0 +1,10 @@
+services:
+  xserver:
+    container_name: xserver
+    image: karsten13/xserver:latest
+    privileged: true
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:z
+    environment:
+      DISPLAY: unix:0.0
+    restart: unless-stopped

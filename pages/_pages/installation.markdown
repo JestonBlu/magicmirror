@@ -106,3 +106,15 @@ docker compose up -d
 ```
 
 > With every new image the old image remains on your hard disc and occupies disk space. To get rid of all old images you can execute `docker image prune -f`.
+
+
+## Running on Raspberry Pi OS Lite (or on another operating system without desktop)
+
+You can use Raspberry Pi OS Lite as operating system which has no graphical desktop. You have to setup Raspberry Pi OS Lite yourself and login (directly or per ssh).
+
+For installing you can use the install script from this repository:
+
+```bash
+curl -OL https://gitlab.com/khassel/magicmirror/-/raw/master/run/install/install_raspi_lite.sh
+bash install_raspi_lite.sh
+```
