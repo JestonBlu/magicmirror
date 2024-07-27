@@ -22,7 +22,13 @@ Open a shell in your home directory and run
 git clone https://gitlab.com/khassel/magicmirror.git
 ```
 
-Now cd into the new directory `magicmirror/run` and copy 2 files:
+### Use install script
+
+`cd` into the new directory `magicmirror/install` and  execute `bash install.sh <scenario>` where you have to replace `<scenario>` with `electron` or `server` or `client`.
+
+### Manual Install
+
+`cd` into the new directory `magicmirror/run` and copy 2 files:
 
 ```bash
 cd ./magicmirror/run
@@ -112,9 +118,4 @@ docker compose up -d
 
 You can use Raspberry Pi OS Lite as operating system which has no graphical desktop. You have to setup Raspberry Pi OS Lite yourself and login (directly or per ssh).
 
-For installing you can use the install script from this repository:
-
-```bash
-curl -OL https://gitlab.com/khassel/magicmirror/-/raw/master/run/install/install_raspi_lite.sh
-bash install_raspi_lite.sh
-```
+For installing you can use the install script as described above.
