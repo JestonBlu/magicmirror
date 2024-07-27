@@ -118,4 +118,13 @@ docker compose up -d
 
 You can use Raspberry Pi OS Lite as operating system which has no graphical desktop. You have to setup Raspberry Pi OS Lite yourself and login (directly or per ssh).
 
+You need to install `git` with
+
+```bash
+sudo apt-get update
+sudo apt-get install -y git
+```
+
+and then clone this repository.
+
 For installing you can use the install script as described above.

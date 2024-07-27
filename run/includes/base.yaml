@@ -11,7 +11,7 @@ services:
         condition: service_completed_successfully
     extends:
       service: base
-  server_no_init:
+  server_no:
     environment:
       MM_OVERRIDE_DEFAULT_MODULES: ${MM_OVERRIDE_DEFAULT_MODULES}
       MM_OVERRIDE_CSS: ${MM_OVERRIDE_CSS}
@@ -26,8 +26,8 @@ services:
       init:
         condition: service_completed_successfully
     extends:
-      service: server_no_init
-  electron_no_init:
+      service: server_no
+  electron_no:
     extends:
       service: base
     volumes:
@@ -50,8 +50,8 @@ services:
       init:
         condition: service_completed_successfully
     extends:
-      service: electron_no_init
-  client_no_init:
+      service: electron_no
+  client_no:
     image: ${MM_IMAGE}
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix

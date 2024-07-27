@@ -70,12 +70,12 @@ fi
 # set scenario:
 sed -i 's|MM_SCENARIO=.*|MM_SCENARIO="'$scenario'"|g' .env
 if [[ "$scenario" == "client" ]]; then
-  sed -i 's|MM_INIT=.*|MM_INIT="no_init"|g' .env
+  sed -i 's|MM_INIT=.*|MM_INIT="no"|g' .env
 else
   sed -i 's|MM_INIT=.*|MM_INIT="init"|g' .env
 fi
 
-sed -i 's|MM_XSERVER=.*|MM_XSERVER="no_xserver"|g' .env
+sed -i 's|MM_XSERVER=.*|MM_XSERVER="no"|g' .env
 if [[ "$scenario" == "electron" ]]; then
   if ! xset -q > /dev/null 2>&1; then
     # use own xserver
