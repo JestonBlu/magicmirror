@@ -22,6 +22,8 @@ RUN set -e; \
     chmod u+rwx,g+rwx,o+rwx /etc; \
     chmod u+rw,g+rw,o+rw /etc/localtime /etc/timezone; \
     chmod +x *.sh /usr/local/bin/sudo; \
+    git config --system --add safe.directory /opt/magic_mirror; \
+    git config core.fileMode false; \
     ./build_info.sh "Runtime" "$GIT_INFO"; \
     rm -f build_info.sh;
 

@@ -12,6 +12,8 @@ COPY --from=builder --chmod=0777 /opt/magic_mirror /opt/magic_mirror
     
 RUN set -e; \
     useradd -u 1000 node; \
+    git config --system --add safe.directory /opt/magic_mirror; \
+    git config core.fileMode false; \
     touch /etc/timezone; \
     chmod u+rwx,g+rwx,o+rwx /etc; \
     chmod u+rw,g+rw,o+rw /etc/localtime /etc/timezone;

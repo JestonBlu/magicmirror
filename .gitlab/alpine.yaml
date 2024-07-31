@@ -83,7 +83,6 @@ test_alpine:
   script:
   - |
     set -e
-    git config --global --add safe.directory /opt/magic_mirror
     cd /opt/magic_mirror
     git log -1 > /tmp/image.txt
     if [ "${CI_COMMIT_BRANCH}" = "master" ]; then

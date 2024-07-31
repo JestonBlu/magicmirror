@@ -68,6 +68,8 @@ RUN set -e; \
     chmod +x *.sh /usr/local/bin/sudo; \
     chmod u+rwx,g+rwx,o+rwx /etc; \
     chmod u+rw,g+rw,o+rw /etc/localtime /etc/timezone; \
+    git config --system --add safe.directory /opt/magic_mirror; \
+    git config core.fileMode false; \
     c_rehash; \
     groupadd --gid 997 gpio; \
     usermod -a -G gpio node; \

@@ -19,9 +19,6 @@ mkdir -p ${modules_dir}
 mkdir -p ${config_dir}
 mkdir -p ${css_dir}
 
-git config --global --add safe.directory /opt/magic_mirror
-git config --global core.fileMode false
-
 if [ "$STARTENV" = "init" ]; then
   _info "chown modules and config folder ..."
   chown -R ${MM_UID}:${MM_GID} ${modules_dir} &
