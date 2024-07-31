@@ -19,23 +19,27 @@ mkdir -p ${modules_dir}
 mkdir -p ${config_dir}
 mkdir -p ${css_dir}
 
+git config --global --add safe.directory /opt/magic_mirror
+git config --global core.fileMode false
+
 if [ "$STARTENV" = "init" ]; then
   _info "chown modules and config folder ..."
-  chown -R node:node ${modules_dir} &
-  chown -R node:node ${config_dir}
-  chown -R node:node ${css_dir}
+  chown -R ${MM_UID}:${MM_GID} ${modules_dir} &
+  chown -R ${MM_UID}:${MM_GID} ${config_dir}
+  chown -R ${MM_UID}:${MM_GID} ${css_dir}
   _info "done."
 
   exit 0
 fi
 
-[ -z "$TZ" ] && export TZ="$(wget -qO - http://geoip.ubuntu.com/lookup | sed -n -e 's/.*<TimeZone>\(.*\)<\/TimeZone>.*/\1/p')"
+if [ -z "$TZ" ]; then
+  export TZ="$(wget -qO - http://geoip.ubuntu.com/lookup | sed -n -e 's/.*<TimeZone>\(.*\)<\/TimeZone>.*/\1/p')"
+  ln -fs /usr/share/zoneinfo/$TZ /etc/localtime
+  echo "$TZ" > /etc/timezone
+fi
 
 if [ -z "$TZ" ]; then
   _info "***WARNING*** could not set timezone, please set TZ variable in compose.yaml, see https://khassel.gitlab.io/magicmirror/configuration/#timezone"
-else
-  ln -fs /usr/share/zoneinfo/$TZ /etc/localtime
-  echo "$TZ" > /etc/timezone
 fi
 
 if [ ! -d "${default_dir}" ]; then

@@ -12,8 +12,8 @@ USER root
 WORKDIR /opt/magic_mirror
 
 # copy startscripts into container:
-COPY *.sh /opt/magic_mirror/
-COPY --from=builder --chown=node:node /opt/magic_mirror /opt/magic_mirror
+COPY --chmod=0777 *.sh /opt/magic_mirror/
+COPY --from=builder --chmod=0777 /opt/magic_mirror /opt/magic_mirror
 
 # procps, arp-scan needed for the module MMM-NetworkScanner
 # modules which needs sudo must be run as root, use `user: root` in docker-compose.yaml
@@ -66,8 +66,8 @@ RUN set -e; \
     echo "#!/bin/bash" > /usr/local/bin/sudo; \
     echo 'exec "$@"' >> /usr/local/bin/sudo; \
     chmod +x *.sh /usr/local/bin/sudo; \
-    chown node:node *.sh; \
-    chown node:node /etc /etc/localtime /etc/timezone; \
+    chmod u+rwx,g+rwx,o+rwx /etc; \
+    chmod u+rw,g+rw,o+rw /etc/localtime /etc/timezone; \
     c_rehash; \
     groupadd --gid 997 gpio; \
     usermod -a -G gpio node; \

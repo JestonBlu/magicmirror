@@ -98,3 +98,6 @@ if [[ "$_sudo" == "sudo" ]]; then
   sleep 20
   sudo reboot now
 fi
+
+# cleanup
+$_sudo docker image prune -f

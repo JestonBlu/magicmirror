@@ -4,6 +4,8 @@ services:
     user: root
     environment:
       STARTENV: init
+      MM_UID: ${MM_UID}
+      MM_GID: ${MM_GID}
     extends:
       service: base
       file: base.yaml

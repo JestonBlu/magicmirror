@@ -4,22 +4,22 @@ FROM ${BUILDER_IMG} as builder
 FROM ${BASE_IMG}
 LABEL maintainer="Karsten Hassel"
 
+WORKDIR /opt/magic_mirror
+
+# copy startscripts into container:
+COPY --chmod=0777 *.sh /opt/magic_mirror/
+COPY --from=builder --chmod=0777 /opt/magic_mirror /opt/magic_mirror
+    
 RUN set -e; \
     useradd -u 1000 node; \
     touch /etc/timezone; \
-    chown node:node /etc /etc/localtime /etc/timezone;
-
-WORKDIR /opt/magic_mirror
+    chmod u+rwx,g+rwx,o+rwx /etc; \
+    chmod u+rw,g+rw,o+rw /etc/localtime /etc/timezone;
 
 USER node
 
-# copy startscripts into container:
-COPY --chown=node:node *.sh /opt/magic_mirror/
-COPY --from=builder --chown=node:node /opt/magic_mirror /opt/magic_mirror
-
 ARG GIT_INFO
 RUN set -e; \
-    chmod +x *.sh; \
     ./build_info.sh "Runtime" "$GIT_INFO"; \
     rm -f build_info.sh;
 
