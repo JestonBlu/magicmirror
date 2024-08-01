@@ -6,5 +6,6 @@ services:
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix:z
     environment:
-      DISPLAY: unix:0.0
+      DISPLAY: :0.0
+      XRANDR_PARAMS: "${XRANDR_PARAMS}"
     restart: unless-stopped
