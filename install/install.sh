@@ -33,7 +33,7 @@ base="$(dirname $(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
 branch=$(git rev-parse --abbrev-ref HEAD)
 _sudo=""
 
-_info "Step1: Installing docker"
+_info "--> Installing docker"
 
 if command -v docker > /dev/null; then
   echo "docker is already installed:"
@@ -50,51 +50,51 @@ else
   _sudo="sudo"
 fi
 
-_info "Step2: Magicmirror docker setup for scenario $scenario"
-
 cd "$base/run"
 
-[[ -f ".env" ]] && cp ".env" ".env-sav"
-[[ -f "compose.yaml" ]] && cp "compose.yaml" "compose.yaml-sav"
-cp original.env .env
-cp original.compose.yaml compose.yaml
+[[ -f "compose.yaml" ]] || cp original.compose.yaml compose.yaml
+if [[ ! -f ".env" ]]; then
+  _info "--> Magicmirror docker setup for scenario $scenario"
 
-echo "updating .env file"
+  echo "creating .env file"
 
-# if not on master use develop image
-if [[ "$branch" != "master" ]]; then
-  echo "we are not on the master branch so using image karsten13/magicmirror:develop"
-  sed -i 's|MM_IMAGE=.*|MM_IMAGE="karsten13/magicmirror:develop"|g' .env
-fi
+  cp original.env .env
 
-# set scenario:
-sed -i 's|MM_SCENARIO=.*|MM_SCENARIO="'$scenario'"|g' .env
-if [[ "$scenario" == "client" ]]; then
-  sed -i 's|MM_INIT=.*|MM_INIT="no"|g' .env
-else
-  sed -i 's|MM_INIT=.*|MM_INIT="init"|g' .env
-fi
+  # if not on master use develop image
+  if [[ "$branch" != "master" ]]; then
+    echo "we are not on the master branch so using image karsten13/magicmirror:develop"
+    sed -i 's|MM_IMAGE=.*|MM_IMAGE="karsten13/magicmirror:develop"|g' .env
+  fi
 
-sed -i 's|MM_XSERVER=.*|MM_XSERVER="no"|g' .env
-if [[ "$scenario" == "electron" ]]; then
-  if ! xset -q > /dev/null 2>&1; then
-    # use own xserver
-    echo "found no xserver so using own container"
-    sed -i 's|MM_XSERVER=.*|MM_XSERVER="xserver"|g' .env
+  # set scenario:
+  sed -i 's|MM_SCENARIO=.*|MM_SCENARIO="'$scenario'"|g' .env
+  if [[ "$scenario" == "client" ]]; then
+    sed -i 's|MM_INIT=.*|MM_INIT="no"|g' .env
+  else
+    sed -i 's|MM_INIT=.*|MM_INIT="init"|g' .env
+  fi
+
+  sed -i 's|MM_XSERVER=.*|MM_XSERVER="no"|g' .env
+  if [[ "$scenario" == "electron" ]]; then
+    if ! xset -q > /dev/null 2>&1; then
+      # use own xserver
+      echo "found no xserver so using own container"
+      sed -i 's|MM_XSERVER=.*|MM_XSERVER="xserver"|g' .env
+    fi
   fi
 fi
 
-_info "Step3: Pulling docker images"
+_info "--> Pulling docker images"
 
 # need sudo for docker here if docker was installed with this script
 $_sudo docker compose pull
 
-_info "Step4: Starting magicmirror"
+_info "--> Starting magicmirror"
 
 $_sudo docker compose up -d
 
 if [[ "$_sudo" == "sudo" ]]; then
-  _info "Step5: Reboot needed, starting in 20 sec. (use ctrl-c to skip)"
+  _info "--> Reboot needed, starting in 20 sec. (use ctrl-c to skip)"
   sleep 20
   sudo reboot now
 fi
