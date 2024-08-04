@@ -5,6 +5,10 @@ permalink: /images/
 toc: false
 ---
 
+> ⚠️ Changes in Aug. 2024 (see [installation](/magicmirror/installation/#init-container-and-running-as-root))
+> - `sudo` removed (use user `root`)
+> - updating volume permissions on startup removed (use init container)
+
 ## Images on [Docker Hub](https://hub.docker.com/r/karsten13/magicmirror/):  [![](https://img.shields.io/docker/pulls/karsten13/magicmirror.svg)](https://hub.docker.com/r/karsten13/magicmirror/)
 
 The docker image `karsten13/magicmirror` is available with these tags:

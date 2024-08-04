@@ -7,7 +7,7 @@ permalink: /installation/
 
 - [Docker](https://docs.docker.com/engine/installation/)
 - to run `docker` commands without needing `sudo` please refer to the [linux postinstall documentation](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user)
-- as we are using `docker compose` commands the compose plugin must be installed. If missing you find [here](https://docs.docker.com/compose/install/linux/) instructions how to install it. If you don't want to use compose, see [this section in the FAQ](/magicmirror/faq/#how-to-start-magicmirror-without-using-docker-composeyml-files)
+- as we are using `docker compose` commands the compose plugin must be installed. If missing you find [here](https://docs.docker.com/compose/install/linux/) instructions how to install it. If you don't want to use compose, see [this section in the FAQ](/magicmirror/faq/#how-to-start-magicmirror-without-using-composeyaml-files)
 
 ## Additional prerequisites for running on a raspberry pi with Scenario **electron** ✌️ or **client** 👌
 
@@ -113,6 +113,15 @@ docker compose up -d
 
 > With every new image the old image remains on your hard disc and occupies disk space. To get rid of all old images you can execute `docker image prune -f`.
 
+## Init container and running as root
+
+The container runs with userid=1000, this is normally the userid of the pi user.
+
+The volumes on the host (~/magicmirror/mounts/*) are created at first start from the docker daemon with userid=0 (root), so we have to correct the permissions, otherwise the container cannot access the volumes. This is done by a init container which is started before the mm container.
+
+If you don't want or need this behavior you can remove the init container by setting `MM_INIT="no_init"` in the `.env` file.
+
+The container has no root permissions and no `sudo` installed, so if you need such permissions you have to add `user: root` to the `compose.yaml` file.
 
 ## Running on Raspberry Pi OS Lite (or on another operating system without desktop)
 
