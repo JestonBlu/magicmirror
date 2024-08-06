@@ -14,6 +14,23 @@ _error() {
   echo "[entrypoint $(date +%T.%3N)] [ERROR]  $1"
 }
 
+_start_mm() {
+  if [ "$(id -u)" = "0" ]; then
+    _info "running as root but starting the magicmirror process with uid=1000"
+    _file="mm.env"
+    rm -f $_file
+    echo "export START_CMD=\"$@\"" > $_file
+    for _line in $(env); do
+      if echo "$_line" | grep -Eq '^(DISPLAY.*|MM_.*|NODE.*|DBUS.*|ELECTRON.*|TZ.*)$'; then
+        echo "export $_line" >> $_file
+      fi
+    done
+    exec su - node -c 'cd /opt/magic_mirror; . '$_file'; $START_CMD'
+  else
+    exec "$@"
+  fi
+}
+
 # directories should be mounted, if not, create them:
 mkdir -p ${modules_dir}
 mkdir -p ${config_dir}
@@ -21,7 +38,7 @@ mkdir -p ${css_dir}
 
 if [ "$STARTENV" = "init" ]; then
   _info "chown modules and config folder ..."
-  chown -R ${MM_UID}:${MM_GID} ${modules_dir} &
+  chown -R ${MM_UID}:${MM_GID} ${modules_dir}
   chown -R ${MM_UID}:${MM_GID} ${config_dir}
   chown -R ${MM_UID}:${MM_GID} ${css_dir}
   _info "done."
@@ -130,19 +147,19 @@ else
     if [ -z "$MM_SCENARIO" ]; then
       # ... and no scenario set, then add defaults depending if electron is installed:
       if command -v node_modules/.bin/electron > /dev/null; then
-        exec env TZ=$TZ npm start
+        _start_mm npm start
       else
-        exec env TZ=$TZ npm run server
+        _start_mm npm run server
       fi
     else
       # ... add defaults depending of the scenario:
       if [ "$MM_SCENARIO" = "electron" ]; then
-        exec env TZ=$TZ npm start
+        _start_mm npm start
       else
-        exec env TZ=$TZ npm run server
+        _start_mm npm run server
       fi
     fi
   else
-    exec env TZ=$TZ "$@"
+    _start_mm "$@"
   fi
 fi
