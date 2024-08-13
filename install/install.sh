@@ -84,13 +84,14 @@ if [[ ! -f ".env" ]]; then
   fi
 fi
 
-_info "--> Pulling docker images"
-
+_info "--> Pulling docker images and starting magicmirror"
 # need sudo for docker here if docker was installed with this script
+
+# use up so mm can start if there are already local images
+$_sudo docker compose up -d
+# pull new images
 $_sudo docker compose pull
-
-_info "--> Starting magicmirror"
-
+# restart (only if new images pulled)
 $_sudo docker compose up -d
 
 if [[ "$_sudo" == "sudo" ]]; then
