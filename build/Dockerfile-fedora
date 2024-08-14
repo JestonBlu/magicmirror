@@ -6,12 +6,13 @@ LABEL maintainer="Karsten Hassel"
 
 WORKDIR /opt/magic_mirror
 
+RUN useradd -u 1000 node
+
 # copy startscripts into container:
-COPY --chmod=0777 *.sh /opt/magic_mirror/
-COPY --from=builder --chmod=0777 /opt/magic_mirror /opt/magic_mirror
+COPY --chmod=0777 --chown=node:node *.sh /opt/magic_mirror/
+COPY --from=builder --chmod=0777 --chown=node:node /opt/magic_mirror /opt/magic_mirror
     
 RUN set -e; \
-    useradd -u 1000 node; \
     git config --system --add safe.directory /opt/magic_mirror; \
     git config core.fileMode false; \
     touch /etc/timezone; \

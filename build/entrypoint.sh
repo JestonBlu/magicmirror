@@ -37,10 +37,9 @@ mkdir -p ${config_dir}
 mkdir -p ${css_dir}
 
 if [ "$STARTENV" = "init" ]; then
-  _info "chown modules and config folder ..."
-  chown -R ${MM_UID}:${MM_GID} ${modules_dir}
-  chown -R ${MM_UID}:${MM_GID} ${config_dir}
-  chown -R ${MM_UID}:${MM_GID} ${css_dir}
+  _info "change permissions for folders modules, config, css ..."
+  chown -R ${MM_UID}:${MM_GID} ${modules_dir} ${config_dir} ${css_dir}
+  chmod -R ${MM_CHMOD} ${modules_dir} ${config_dir} ${css_dir}
   _info "done."
 
   exit 0
