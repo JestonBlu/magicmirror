@@ -47,8 +47,16 @@ fi
 
 if [ -z "$TZ" ]; then
   export TZ="$(wget -qO - http://geoip.ubuntu.com/lookup | sed -n -e 's/.*<TimeZone>\(.*\)<\/TimeZone>.*/\1/p')"
-  ln -fs /usr/share/zoneinfo/$TZ /etc/localtime
-  echo "$TZ" > /etc/timezone
+  if [ -w /etc/localtime ]; then
+    ln -fs /usr/share/zoneinfo/$TZ /etc/localtime
+  else
+    _info "***WARNING*** could write to /etc/localtime"
+  fi
+  if [ -w /etc/timezone ]; then
+    echo "$TZ" > /etc/timezone
+  else
+    _info "***WARNING*** could write to /etc/timezone"
+  fi
 fi
 
 if [ -z "$TZ" ]; then
