@@ -1,6 +1,4 @@
 # start with: dc run --rm --name mm --service-ports magicmirror
-version: '3'
-
 services:
   magicmirror:
     image: registry.gitlab.com/khassel/magicmirror:develop_debug22

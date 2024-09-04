@@ -60,6 +60,26 @@ MM_INIT="no_init"
 
 > ⚠️ You have to edit the values `MM_CLIENT_PORT` and `MM_CLIENT_ADDRESS` in the `.env` file if you are running scenario **client**.
 
+### Using own compose file
+
+If you have an own compose file where you want to add this setup you can use the install script or manual install and then run `docker compose config` in the `magicmirror/run` folder. You can copy/paste the output in your existing compose file. There are more informations in the [FAQ](/magicmirror/faq/#how-to-start-magicmirror-without-using-composeyaml-files).
+
+A minimal compose file for scenario **server** ☝️ is:
+
+```yaml
+services:
+  magicmirror:
+    container_name: mm
+    image: karsten13/magicmirror:latest
+    restart: unless-stopped
+    volumes:
+      - ../mounts/config:/opt/magic_mirror/config
+      - ../mounts/modules:/opt/magic_mirror/modules
+      - ../mounts/css:/opt/magic_mirror/css
+    ports:
+      - 8080:8080
+```
+
 ## Start MagicMirror²
 
 Navigate to `~/magicmirror/run` and execute
