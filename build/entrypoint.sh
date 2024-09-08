@@ -17,6 +17,8 @@ _error() {
 _start_mm() {
   if [ "$(id -u)" = "0" ]; then
     _info "running as root but starting the magicmirror process with uid=1000"
+    # directories must be writable by user node:
+    chown -R node:node ${modules_dir} ${config_dir} ${css_dir}
     _file="mm.env"
     rm -f $_file
     echo "export START_CMD=\"$@\"" > $_file
