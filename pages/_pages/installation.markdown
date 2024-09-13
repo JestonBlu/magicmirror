@@ -7,7 +7,7 @@ permalink: /installation/
 
 - [Docker](https://docs.docker.com/engine/installation/)
 - to run `docker` commands without needing `sudo` please refer to the [linux postinstall documentation](https://docs.docker.com/engine/install/linux-postinstall/#manage-docker-as-a-non-root-user)
-- as we are using `docker compose` commands the compose plugin must be installed. If missing you find [here](https://docs.docker.com/compose/install/linux/) instructions how to install it. If you don't want to use compose, see [this section in the FAQ](/magicmirror/faq/#how-to-start-magicmirror-without-using-composeyaml-files)
+- as we are using `docker compose` commands the compose plugin must be installed. If missing you find [here](https://docs.docker.com/compose/install/linux/) instructions how to install it. ⚠️ This setup needs `docker compose` version `2.20.3` or above, you can check the version with `docker compose version`. If you don't want to use compose, see [this section in the FAQ](/magicmirror/faq/#how-to-start-magicmirror-without-using-composeyaml-files)
 
 ## Additional prerequisites for running on a raspberry pi with Scenario **electron** ✌️ or **client** 👌
 
