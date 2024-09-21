@@ -3,10 +3,10 @@ services:
     container_name: init
     user: root
     environment:
-      STARTENV: init
-      MM_UID: ${MM_UID}
-      MM_GID: ${MM_GID}
-      MM_CHMOD: ${MM_CHMOD}
+      - STARTENV=init
+      - MM_UID
+      - MM_GID
+      - MM_CHMOD
     extends:
       service: base
       file: base.yaml

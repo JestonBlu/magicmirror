@@ -4,8 +4,8 @@ services:
     image: karsten13/xserver:latest
     privileged: true
     volumes:
-      - /tmp/.X11-unix:/tmp/.X11-unix:z
+      - /tmp/.X11-unix:/tmp/.X11-unix
     environment:
-      DISPLAY: :0.0
-      XRANDR_PARAMS: "${XRANDR_PARAMS}"
+      - DISPLAY=:0.0
+      - XRANDR_PARAMS
     restart: unless-stopped

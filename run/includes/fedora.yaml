@@ -2,10 +2,10 @@ services:
   fedora:
     image: karsten13/magicmirror:fedora
     volumes:
-      - ../../mounts/config:/opt/magic_mirror/config:z
-      - ../../mounts/modules:/opt/magic_mirror/modules:z
-      - ../../mounts/css:/opt/magic_mirror/css:z
+      - ${VOLUME_CONFIG}:z
+      - ${VOLUME_MODULES}:z
+      - ${VOLUME_CSS}:z
       - /tmp/.X11-unix:/tmp/.X11-unix:z
     privileged: true
     environment:
-      DISPLAY: unix:0.0
+      - DISPLAY=unix:0.0

@@ -2,9 +2,9 @@ services:
   base:
     image: ${MM_IMAGE}
     volumes:
-      - ../../mounts/config:/opt/magic_mirror/config
-      - ../../mounts/modules:/opt/magic_mirror/modules
-      - ../../mounts/css:/opt/magic_mirror/css
+      - ${VOLUME_CONFIG}
+      - ${VOLUME_MODULES}
+      - ${VOLUME_CSS}
   base_init:
     depends_on:
       init:
@@ -13,10 +13,12 @@ services:
       service: base
   server_no:
     environment:
-      MM_OVERRIDE_DEFAULT_MODULES: ${MM_OVERRIDE_DEFAULT_MODULES}
-      MM_OVERRIDE_CSS: ${MM_OVERRIDE_CSS}
-      MM_SHOW_CURSOR: ${MM_SHOW_CURSOR}
-      MM_SCENARIO: ${MM_SCENARIO}
+      - MM_OVERRIDE_DEFAULT_MODULES
+      - MM_OVERRIDE_CSS
+      - MM_SHOW_CURSOR
+      - MM_SCENARIO
+      - MM_MODULES_DIR
+      - MM_CUSTOMCSS_FILE
     ports:
       - ${MM_SERVER_PORTS}
     extends:

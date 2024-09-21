@@ -11,8 +11,8 @@ services:
       - "6789:6789"
       - "8907:8907"
     volumes:
-      - ../../mounts/modules:/home/node/MagicMirror/modules
+      - ../../mounts/${MM_MODULES_DIR}:/home/node/MagicMirror/modules
       - ../../mounts/config:/home/node/MagicMirror/config
-      - ../../mounts/css:/home/node/MagicMirror/css
+      - ../../mounts/${MM_CUSTOMCSS_FILE}:/home/node/MagicMirror/css/custom.css
       - ../../mounts/mmpm-config:/home/node/.config/mmpm
     restart: unless-stopped
