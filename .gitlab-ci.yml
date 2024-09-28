@@ -16,8 +16,8 @@ image: ${CI_REGISTRY}/khassel/container/kaniko:latest
 
 variables:
   GIT_DEPTH: 1
-  MAGICMIRROR_VERSION: "v2.28.0"
-  NODE_VERSION_MASTER: "20"
+  MAGICMIRROR_VERSION: "v2.29.0"
+  NODE_VERSION_MASTER: "22"
   NODE_VERSION_DEVELOP: "22"
   DEBIAN_VERSION_MASTER: "bookworm"
   DEBIAN_VERSION_DEVELOP: "bookworm"
