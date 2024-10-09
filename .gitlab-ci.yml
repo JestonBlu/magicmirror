@@ -6,11 +6,7 @@ include:
   - template: Security/Container-Scanning.gitlab-ci.yml
   - project: "khassel/container"
     file: "/.yaml/docker_readme.yaml"
-  - ".gitlab/alpine.yaml"
-  - ".gitlab/artifacts.yaml"
-  - ".gitlab/debian.yaml"
-  - ".gitlab/fedora.yaml"
-  - ".gitlab/test.yaml"
+  - ".gitlab/*.yaml"
 
 image: ${CI_REGISTRY}/khassel/container/kaniko:latest
 

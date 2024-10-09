@@ -1,0 +1,16 @@
+include: 
+  - project: "khassel/buildkit"
+    file: "/.buildkit.yml"
+
+build_xserver:
+  stage: build
+  extends: .docker_buildkit
+  variables:
+    DOCKER_CONTEXT: "./build/xserver"
+    DOCKERFILE_DIR: "./build/xserver"
+    PUSH_IMAGES: "karsten13/xserver:latest"
+    GIT_DEPTH: 1
+    REGISTRY: "docker"
+    BUILDKIT_ARGS: '--opt platform=linux/amd64,linux/arm64,linux/arm/v7'
+  rules:
+  - if: $TASK == "build_xserver"

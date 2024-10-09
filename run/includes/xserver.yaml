@@ -8,4 +8,5 @@ services:
     environment:
       - DISPLAY=:0.0
       - XRANDR_PARAMS
+      - XRANDR_DELAY
     restart: unless-stopped
