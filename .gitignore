@@ -1,5 +1,6 @@
 *.log
-mounts/
+mounts/css/
+mounts/modules/
 run/*compose.y*
 !run/original.compose.yaml
 Gemfile*
